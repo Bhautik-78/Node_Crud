@@ -5,9 +5,9 @@ require('dotenv').config();
 exports.getApplication = async (req, res) => {
     try {
         console.log("req.query",req.query)
-        const {schemaNumber, date} = req.query;
+        const {schemaNumber = "", date = ""} = req.query;
         let query = {};
-        if (req.body) {
+        if ((schemaNumber !== '') || (date !== '')) {
             query = {
                 schemaNumber : schemaNumber,
                 date : date
