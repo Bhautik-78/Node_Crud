@@ -4,7 +4,8 @@ require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
-        const {schemaNumber, date} = req.body;
+        console.log("req.query",req.query)
+        const {schemaNumber, date} = req.query;
         let query = {};
         if (req.body) {
             query = {
@@ -48,7 +49,6 @@ exports.editApplication = async (req, res) => {
 exports.deleteApplication = async (req, res) => {
     try {
         const isDeleted = await Schema.deleteOne( {_id : req.params.id});
-        console.log("isDeleted",isDeleted)
         if(isDeleted){
             res.status(200).send({message: "successFully deleted"})
         }else {

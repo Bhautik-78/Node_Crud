@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     schemaName : String,
-    date : Date,
+    date : String,
     productName : String,
     EANCode : Number,
     quantity : Number,

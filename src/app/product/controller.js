@@ -4,7 +4,7 @@ require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
-        const {productName, EANCode, SKUCode} = req.body;
+        const {productName, EANCode, SKUCode} = req.query;
         let query = {};
         if (req.body) {
             query = {
