@@ -14,7 +14,25 @@ exports.getApplication = async (req, res) => {
             }
         }
         const applicationData = await Schema.find(query)
-        res.status(200).send(applicationData)
+        if(applicationData.length){
+            res.status(200).send(applicationData)
+        }else {
+            res.status(400).send({message: "something went wrong"})
+        }
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+exports.getApplicationForID = async (req, res) => {
+    try {
+        const { id } = req.params.id;
+        const applicationData = await Schema.find({_id: id})
+        if(applicationData.length){
+            res.status(200).send(applicationData)
+        }else {
+            res.status(400).send({message: "something went wrong"})
+        }
     } catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
