@@ -30,7 +30,11 @@ exports.getApplicationFormEAN = async (req, res) => {
             }
         }
         const applicationData = await Product.find(query);
-        res.status(200).send(applicationData)
+        if(applicationData.length){
+            res.status(200).send(applicationData)
+        }else {
+            res.status(201).send({message: "data does not exist"})
+        }
     } catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
