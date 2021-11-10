@@ -6,12 +6,14 @@ exports.getApplication = async (req, res) => {
     try {
         const {productName = '', EANCode = '', SKUCode = ''} = req.query;
         let query = {};
-        if ((productName !== '') || (EANCode !== '') || (SKUCode !== '')) {
-            query = {
-                productName: productName,
-                EANCode: EANCode,
-                SKUCode: SKUCode
-            }
+        if (productName !== '') {
+            query.productName = productName
+        }
+        if(EANCode !== ''){
+            query.EANCode = EANCode
+        }
+        if(SKUCode !== ''){
+            query.SKUCode = SKUCode
         }
         const applicationData = await Product.find(query);
         res.status(200).send(applicationData)
