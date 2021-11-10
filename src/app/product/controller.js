@@ -7,7 +7,7 @@ exports.getApplication = async (req, res) => {
         const {productName = '', EANCode = '', SKUCode = ''} = req.query;
         let query = {};
         if (productName !== '') {
-            query.productName = productName
+            query.productName =  { $regex : new RegExp("^" + productName + "$", "i") }
         }
         if(EANCode !== ''){
             query.EANCode = EANCode
