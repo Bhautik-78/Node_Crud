@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Product = mongoose.model("product");
+const Schema = mongoose.model("schema");
 require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
@@ -7,7 +8,7 @@ exports.getApplication = async (req, res) => {
         const {productName = '', EANCode = '', SKUCode = ''} = req.query;
         let query = {};
         if (productName !== '') {
-            query.productName =  { $regex : new RegExp("^" + productName + "$", "i") }
+            query.productName =  { $regex : new RegExp("^" + productName, "i") }
         }
         if(EANCode !== ''){
             query.EANCode = EANCode
@@ -36,6 +37,15 @@ exports.getApplicationFormEAN = async (req, res) => {
             }
         }
         const applicationData = await Product.find(query);
+        const schemaData = await Schema.find(query);
+
+        const schemaObject = schemaData.map(item => ({
+            id : item._id,
+            schemaName : item.schemaName
+        }));
+
+        applicationData[0].schemaList = schemaObject
+
         if(applicationData.length){
             res.status(200).send(applicationData)
         }else {

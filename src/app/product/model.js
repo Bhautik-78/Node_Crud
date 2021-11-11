@@ -21,6 +21,7 @@ const productSchema = new Schema({
     schemes : String,
     remarks : String,
     active : Boolean,
+    schemaList : Array
 });
 
 module.exports = mongoose.model( "product", productSchema );
