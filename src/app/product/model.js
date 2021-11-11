@@ -7,6 +7,8 @@ const productSchema = new Schema({
     productName : String,
     brandName : String,
     MRP : Number,
+    quantity: Number,
+    dateOfAvailability : String,
     sellingPrice : Number,
     productImage: String,
     SKUCode : Number,
