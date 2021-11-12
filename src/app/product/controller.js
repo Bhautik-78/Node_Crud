@@ -38,8 +38,10 @@ exports.getApplicationFormEAN = async (req, res) => {
         }
         const applicationData = await Product.find(query);
         const schemaData = await Schema.find(query);
-
-        const schemaObject = schemaData.map(item => ({
+        const sortingList = schemaData.sort((a,b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
+        const schemaObject = sortingList.map(item => ({
             id : item._id,
             schemaName : item.schemaName
         }));
