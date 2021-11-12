@@ -44,7 +44,7 @@ exports.getApplicationFormEAN = async (req, res) => {
             schemaName : item.schemaName
         }));
 
-        applicationData[0].schemaList = schemaObject
+        applicationData[0].schemaList = schemaObject || [];
 
         if(applicationData.length){
             res.status(200).send(applicationData)
