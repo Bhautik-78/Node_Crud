@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
+const XLSX = require("xlsx");
 const Product = mongoose.model("product");
 const Schema = mongoose.model("schema");
 require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
-        const {productName = '', EANCode = '', SKUCode = ''} = req.query;
+        const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = ''} = req.query;
         let query = {};
         if (productName !== '') {
             query.productName =  { $regex : new RegExp("^" + productName, "i") }
@@ -15,6 +16,13 @@ exports.getApplication = async (req, res) => {
         }
         if(SKUCode !== ''){
             query.SKUCode = SKUCode
+        }
+        if(startDate !== ''){
+            if(endDate !== ''){
+                query.date = {$gte:startDate,$lt:endDate}
+            }else {
+                query.date = {$gte:startDate}
+            }
         }
         const applicationData = await Product.find(query);
         if(applicationData.length){
@@ -94,6 +102,82 @@ exports.deleteApplication = async (req, res) => {
             res.status(400).send({message: "something Went Wrong"})
         }
     } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+const processExcel = workbook => {
+    const sheetNamesList = workbook.SheetNames
+    const filesData = {}
+    sheetNamesList.forEach(sheetName => {
+        const worksheet = workbook.Sheets[sheetName]
+        const headers = {}
+        const data = []
+        for (const z in worksheet) {
+            if (z[0] === "!") continue
+            let tt = 0
+            for (let i = 0; i < z.length; i++) {
+                if (!isNaN(z[i])) {
+                    tt = i
+                    break
+                }
+            }
+            const col = z.substring(0, tt)
+            const row = parseInt(z.substring(tt))
+            const value = worksheet[z].v
+            if (row == 1 && value) {
+                headers[col] = value
+                continue
+            }
+            if (!data[row]) data[row] = {}
+            data[row][headers[col]] = value
+        }
+        data.shift()
+        data.shift()
+        filesData[sheetName] = data
+    })
+    return filesData
+}
+
+exports.uploadExcel = async (req, res) => {
+    try {
+        const promiseBuilder = {
+            updateAppPromise: (payload) => new Promise(async (resolve) => {
+                const isCreated = await Product.create(payload);
+                if (isCreated && isCreated._id) {
+                    return resolve({success: true})
+                }else {
+                    return resolve({success: false})
+                }
+            })
+        };
+
+        const {file} = req;
+        const workbook = XLSX.readFile(`./uploads/${file.originalname}`, {
+            cellDates: true
+        })
+        const payload = [];
+        const allPromises = [];
+        const data = processExcel(workbook)
+        Object.keys(data).forEach(v => {
+            const filter = data[v]
+            payload.push(...filter)
+        });
+        if (payload && payload.length > 0) {
+            payload.forEach(item => {
+                allPromises.push(promiseBuilder.updateAppPromise(item))
+            });
+            await Promise.all(allPromises).then(values => {
+                if (values.some(value => value.success)) {
+                    res.status(200).send({success: true, message: "Successfully created"})
+                } else {
+                    res.status(200).send({success: false, message: "There are not records are found!"})
+                }
+            })
+        } else {
+            res.status(200).send({success: true, message: "No Data Found"})
+        }
+    }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };

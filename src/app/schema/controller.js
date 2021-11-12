@@ -4,13 +4,16 @@ require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
-        console.log("req.query",req.query)
-        const {schemaNumber = "", date = ""} = req.query;
+        const {schemaNumber = "", startDate = "", endDate = ""} = req.query;
         let query = {};
-        if ((schemaNumber !== '') || (date !== '')) {
-            query = {
-                schemaNumber : schemaNumber,
-                date : date
+        if(schemaNumber !== ''){
+            query.schemaNumber = schemaNumber
+        }
+        if(startDate !== ''){
+            if(endDate !== ''){
+                query.date = {$gte:startDate,$lt:endDate}
+            }else {
+                query.date = {$gte:startDate}
             }
         }
         const applicationData = await Schema.find(query)
