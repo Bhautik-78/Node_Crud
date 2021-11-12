@@ -157,13 +157,19 @@ exports.uploadExcel = async (req, res) => {
         const workbook = XLSX.readFile(`./uploads/${file.originalname}`, {
             cellDates: true
         })
-        const payload = [];
+        let payload = [];
         const allPromises = [];
         const data = processExcel(workbook)
         Object.keys(data).forEach(v => {
             const filter = data[v]
             payload.push(...filter)
         });
+
+        const obj = await Product.find({});
+
+        const EANList = obj.map(item => item.EANCode);
+
+        payload = payload.filter(item => !EANList.includes(item.EANCode))
 
         const filteredArr = payload.reduce((acc, current) => {
             const x = acc.find(item => item.EANCode === current.EANCode);
