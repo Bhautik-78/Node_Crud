@@ -21,7 +21,10 @@
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.15",
     "nodemon": "^2.0.6",
-    "winston": "^2.3.1"
+    "winston": "^2.3.1",
+    "xlsx": "^0.17.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "multer": "^1.4.3"
+  }
 }
