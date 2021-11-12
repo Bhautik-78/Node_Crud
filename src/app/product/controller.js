@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const XLSX = require("xlsx");
+const _ = require("lodash");
 const Product = mongoose.model("product");
 const Schema = mongoose.model("schema");
 require('dotenv').config();
@@ -163,8 +164,18 @@ exports.uploadExcel = async (req, res) => {
             const filter = data[v]
             payload.push(...filter)
         });
-        if (payload && payload.length > 0) {
-            payload.forEach(item => {
+
+        const filteredArr = payload.reduce((acc, current) => {
+            const x = acc.find(item => item.EANCode === current.EANCode);
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
+            }
+        }, []);
+
+        if (filteredArr && filteredArr.length > 0) {
+            filteredArr.forEach(item => {
                 allPromises.push(promiseBuilder.updateAppPromise(item))
             });
             await Promise.all(allPromises).then(values => {
