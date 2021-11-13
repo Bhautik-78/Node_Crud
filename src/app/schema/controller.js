@@ -11,7 +11,7 @@ exports.getApplication = async (req, res) => {
         }
         if(startDate !== ''){
             if(endDate !== ''){
-                query.date = {$gte:startDate,$lt:endDate}
+                query.date = {$gte:startDate,$lte:endDate}
             }else {
                 query.date = {$gte:startDate}
             }
