@@ -20,9 +20,9 @@ exports.getApplication = async (req, res) => {
         }
         if(startDate !== ''){
             if(endDate !== ''){
-                query.date = {$gte:startDate,$lte:endDate}
+                query.dateOfAvailability = {$gte:startDate,$lte:endDate}
             }else {
-                query.date = {$gte:startDate}
+                query.dateOfAvailability = {$gte:startDate}
             }
         }
         const applicationData = await Product.find(query);
