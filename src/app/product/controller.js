@@ -96,7 +96,6 @@ exports.editApplication = async (req, res) => {
 exports.deleteApplication = async (req, res) => {
     try {
         const isDeleted = await Product.deleteOne({_id: req.params.id});
-        console.log("isDeleted", isDeleted)
         if (isDeleted) {
             res.status(200).send({message: "successFully deleted"})
         } else {
