@@ -188,11 +188,11 @@ exports.uploadExcel = async (req, res) => {
                 if (values.some(value => value.success)) {
                     res.status(200).send({success: true, message: "Successfully created"})
                 } else {
-                    res.status(200).send({success: false, message: "There are not records are found!"})
+                    res.status(400).send({success: false, message: "There are not records are found!"})
                 }
             })
         } else {
-            res.status(200).send({success: false, message: "No Data Found"})
+            res.status(400).send({success: false, message: "No Data Found"})
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
