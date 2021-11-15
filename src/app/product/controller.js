@@ -192,7 +192,7 @@ exports.uploadExcel = async (req, res) => {
                 }
             })
         } else {
-            res.status(200).send({success: true, message: "No Data Found"})
+            res.status(200).send({success: false, message: "No Data Found"})
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
