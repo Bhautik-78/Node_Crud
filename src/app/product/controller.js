@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const XLSX = require("xlsx");
 const _ = require("lodash");
+const moment = require("moment")
 const Product = mongoose.model("product");
 const Schema = mongoose.model("schema");
 require('dotenv').config();
@@ -143,6 +144,7 @@ exports.uploadExcel = async (req, res) => {
     try {
         const promiseBuilder = {
             updateAppPromise: (payload) => new Promise(async (resolve) => {
+                payload.dateOfAvailability = moment(payload.dateOfAvailability).format("YYYY-MM-DD")
                 const isCreated = await Product.create(payload);
                 if (isCreated && isCreated._id) {
                     return resolve({success: true})
