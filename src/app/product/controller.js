@@ -170,30 +170,37 @@ exports.uploadExcel = async (req, res) => {
 
         const EANList = obj.map(item => item.EANCode);
 
+        const removePayload = []
+        payload.forEach((item, index) => (
+            (EANList.includes(item.EANCode) ? removePayload.push(index + 1) : "")
+        ))
         payload = payload.filter(item => !EANList.includes(item.EANCode))
 
-        const filteredArr = payload.reduce((acc, current) => {
-            const x = acc.find(item => item.EANCode === current.EANCode);
-            if (!x) {
-                return acc.concat([current]);
-            } else {
-                return acc;
-            }
-        }, []);
-
-        if (filteredArr && filteredArr.length > 0) {
-            filteredArr.forEach(item => {
-                allPromises.push(promiseBuilder.updateAppPromise(item))
-            });
-            await Promise.all(allPromises).then(values => {
-                if (values.some(value => value.success)) {
-                    res.status(200).send({success: true, message: "Successfully created"})
+        if(!removePayload.length){
+            const filteredArr = payload.reduce((acc, current) => {
+                const x = acc.find(item => item.EANCode === current.EANCode);
+                if (!x) {
+                    return acc.concat([current]);
                 } else {
-                    res.status(400).send({success: false, message: "There are not records are found!"})
+                    return acc;
                 }
-            })
-        } else {
-            res.status(400).send({success: false, message: "No Data Found"})
+            }, []);
+            if (filteredArr && filteredArr.length > 0) {
+                filteredArr.forEach(item => {
+                    allPromises.push(promiseBuilder.updateAppPromise(item))
+                });
+                await Promise.all(allPromises).then(values => {
+                    if (values.some(value => value.success)) {
+                        res.status(200).send({success: true, message: "Successfully created"})
+                    } else {
+                        res.status(400).send({success: false, message: "There are not records are found!"})
+                    }
+                })
+            } else {
+                res.status(400).send({success: false, message: "No Data Found"})
+            }
+        }else {
+            res.status(400).send({status: false, message: `Row no. ${removePayload.toString()} EAN Code duplicated`})
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
