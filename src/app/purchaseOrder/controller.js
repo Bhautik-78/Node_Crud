@@ -24,9 +24,9 @@ exports.getApplication = async (req, res) => {
         }
         if(startDate !== ''){
             if(endDate !== ''){
-                query.Date = {$gte:startDate,$lte:endDate}
+                query.PODate = {$gte:startDate,$lte:endDate}
             }else {
-                query.Date = {$gte:startDate}
+                query.PODate = {$gte:startDate}
             }
         }
         const applicationData = await PurchaseOrder.find(query);
