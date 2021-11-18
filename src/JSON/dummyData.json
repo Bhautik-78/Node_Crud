@@ -1,0 +1,42 @@
+[
+    {
+        "productName" : "Coffee",
+        "brandName" : "Brand",
+        "productImage" : "dgrfgd",
+        "productCategory" : "Grocery",
+        "SKUCode" : "2356",
+        "HSNCode" : "5845",
+        "EANCode" : "8521",
+        "shelfLifeDays" : "52",
+        "UOM" : "20%",
+        "UOMConversation" : "UOM conversion",
+        "quantity" : "5",
+        "dateOfAvailability" : "10-11-2021",
+        "active" : "FALSE",
+        "MRP" : "750",
+        "sellingPrice" : "650",
+        "remarks" : "all working great",
+        "schemes" : "",
+        "margin" : "75"
+    },
+    {
+        "productName" : "Coffee",
+        "brandName" : "Brand",
+        "productImage" : "dgrfgd",
+        "productCategory" : "Grocery",
+        "SKUCode" : "6548",
+        "HSNCode" : "8521",
+        "EANCode" : "6541",
+        "shelfLifeDays" : "95",
+        "UOM" : "90%",
+        "UOMConversation" : "UOM conversion",
+        "quantity" : "5",
+        "dateOfAvailability" : "05-11-2021",
+        "active" : "FALSE",
+        "MRP" : "650",
+        "sellingPrice" : "550",
+        "remarks" : "all working great",
+        "schemes" : "",
+        "margin" : "85"
+    }
+]

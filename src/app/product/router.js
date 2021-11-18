@@ -22,5 +22,6 @@ router.post("/create", controller.createApplication);
 router.put("/edit/:id", controller.editApplication);
 router.delete("/delete/:id", controller.deleteApplication)
 router.post("/excelUpload" , upload.single("file"), controller.uploadExcel)
+router.get("/download" , controller.downloadExcel)
 
 module.exports = router;

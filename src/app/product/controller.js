@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+const excel = require("exceljs");
 const XLSX = require("xlsx");
 const _ = require("lodash");
 const moment = require("moment")
 const Product = mongoose.model("product");
 const Schema = mongoose.model("schema");
+const dummyData = require("../../JSON/dummyData");
 require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
@@ -205,4 +207,68 @@ exports.uploadExcel = async (req, res) => {
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
+};
+
+exports.downloadExcel = async (req, res) => {
+  try {
+
+      const schema = await Schema.find({});
+      const scheamList = Array.isArray(schema) ? schema.map(item => item.schemaName) : []
+      const str = scheamList.toString();
+      const backToArr = [`"${str.split()}"`];
+
+      let workbook = new excel.Workbook();
+      let worksheet = workbook.addWorksheet("sample");
+
+      worksheet.columns = [
+          { header: "productName", key: "productName", width: 20 },
+          { header: "brandName", key: "brandName", width: 20 },
+          { header: "productImage", key: "productImage", width: 20 },
+          { header: "productCategory", key: "productCategory", width: 20 },
+          { header: "SKUCode", key: "SKUCode", width: 20 },
+          { header: "HSNCode", key: "HSNCode", width: 20 },
+          { header: "EANCode", key: "EANCode", width: 20 },
+          { header: "shelfLifeDays", key: "shelfLifeDays", width: 20 },
+          { header: "UOM", key: "UOM", width: 20 },
+          { header: "UOMConversation", key: "UOMConversation", width: 20 },
+          { header: "quantity", key: "quantity", width: 20 },
+          { header: "dateOfAvailability", key: "dateOfAvailability", width: 20 },
+          { header: "active", key: "active", width: 20 },
+          { header: "MRP", key: "MRP", width: 20 },
+          { header: "sellingPrice", key: "sellingPrice", width: 20 },
+          { header: "remarks", key: "remarks", width: 20 },
+          { header: "schemes", key: "schemes", width: 20, type: "list" },
+          { header: "margin", key: "margin", width: 20 },
+      ];
+
+// Add Array Rows
+      worksheet.addRows(dummyData);
+
+      dummyData.forEach((x, index) => {
+          worksheet.getCell(`Q${index+2}`).dataValidation = {
+              type: 'list',
+              allowBlank: false,
+              showErrorMessage: true,
+              promptTitle: 'The value must be Approve or Revoke or No-Action',
+              prompt: 'The value must be Approve or Revoke or No-Action',
+              formulae: backToArr
+          };
+      });
+
+// res is a Stream object
+      res.setHeader(
+          "Content-Type",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+          "Content-Disposition",
+          "attachment; filename=" + "sampleProductionSheet.xlsx"
+      );
+
+      return workbook.xlsx.write(res).then(function () {
+          res.status(200).end();
+      });
+  }  catch (err) {
+      res.status(500).send({message: err.message || "data does not exist"});
+  }
 };

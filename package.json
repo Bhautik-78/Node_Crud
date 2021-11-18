@@ -16,14 +16,15 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
+    "exceljs": "^4.3.0",
     "express": "^4.17.1",
+    "lodash": "latest",
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.15",
     "nodemon": "^2.0.6",
     "winston": "^2.3.1",
-    "xlsx": "^0.17.3",
-    "lodash": "latest"
+    "xlsx": "^0.17.3"
   },
   "devDependencies": {
     "multer": "^1.4.3"
