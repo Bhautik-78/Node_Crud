@@ -13,25 +13,25 @@ exports.getApplication = async (req, res) => {
         const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = ''} = req.query;
         let query = {};
         if (productName !== '') {
-            query.productName =  { $regex : new RegExp("^" + productName, "i") }
+            query.productName = {$regex: new RegExp("^" + productName, "i")}
         }
-        if(EANCode !== ''){
+        if (EANCode !== '') {
             query.EANCode = EANCode
         }
-        if(SKUCode !== ''){
+        if (SKUCode !== '') {
             query.SKUCode = SKUCode
         }
-        if(startDate !== ''){
-            if(endDate !== ''){
-                query.dateOfAvailability = {$gte:startDate,$lte:endDate}
-            }else {
-                query.dateOfAvailability = {$gte:startDate}
+        if (startDate !== '') {
+            if (endDate !== '') {
+                query.dateOfAvailability = {$gte: startDate, $lte: endDate}
+            } else {
+                query.dateOfAvailability = {$gte: startDate}
             }
         }
         const applicationData = await Product.find(query);
-        if(applicationData.length){
+        if (applicationData.length) {
             res.status(200).send(applicationData)
-        }else {
+        } else {
             res.status(201).send({message: "data does not exist"})
         }
     } catch (err) {
@@ -50,19 +50,19 @@ exports.getApplicationFormEAN = async (req, res) => {
         }
         const applicationData = await Product.find(query);
         const schemaData = await Schema.find(query);
-        const sortingList = schemaData.sort((a,b) => {
+        const sortingList = schemaData.sort((a, b) => {
             return new Date(b.date) - new Date(a.date);
         });
         const schemaObject = sortingList.map(item => ({
-            id : item._id,
-            schemaName : item.schemaName
+            id: item._id,
+            schemaName: item.schemaName
         }));
 
         applicationData[0].schemaList = schemaObject || [];
 
-        if(applicationData.length){
+        if (applicationData.length) {
             res.status(200).send(applicationData)
-        }else {
+        } else {
             res.status(201).send({message: "data does not exist"})
         }
     } catch (err) {
@@ -150,7 +150,7 @@ exports.uploadExcel = async (req, res) => {
                 const isCreated = await Product.create(payload);
                 if (isCreated && isCreated._id) {
                     return resolve({success: true})
-                }else {
+                } else {
                     return resolve({success: false})
                 }
             })
@@ -178,7 +178,7 @@ exports.uploadExcel = async (req, res) => {
         ))
         payload = payload.filter(item => !EANList.includes(item.EANCode))
 
-        if(!removePayload.length){
+        if (!removePayload.length) {
             const filteredArr = payload.reduce((acc, current) => {
                 const x = acc.find(item => item.EANCode === current.EANCode);
                 if (!x) {
@@ -201,74 +201,72 @@ exports.uploadExcel = async (req, res) => {
             } else {
                 res.status(400).send({success: false, message: "No Data Found"})
             }
-        }else {
+        } else {
             res.status(201).send({status: false, message: `Row no. ${removePayload.toString()} EAN Code duplicated`})
         }
-    }catch (err) {
+    } catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
 
 exports.downloadExcel = async (req, res) => {
-  try {
+    try {
 
-      const schema = await Schema.find({});
-      const scheamList = Array.isArray(schema) ? schema.map(item => item.schemaName) : []
-      const str = scheamList.toString();
-      const backToArr = [`"${str.split()}"`];
+        const schema = await Schema.find({});
+        const scheamList = Array.isArray(schema) ? schema.map(item => item.schemaName) : []
+        const str = scheamList.toString();
+        const backToArr = [`"${str.split()}"`];
 
-      let workbook = new excel.Workbook();
-      let worksheet = workbook.addWorksheet("sample");
+        let workbook = new excel.Workbook();
+        let worksheet = workbook.addWorksheet("sample");
 
-      worksheet.columns = [
-          { header: "productName", key: "productName", width: 20 },
-          { header: "brandName", key: "brandName", width: 20 },
-          { header: "productImage", key: "productImage", width: 20 },
-          { header: "productCategory", key: "productCategory", width: 20 },
-          { header: "SKUCode", key: "SKUCode", width: 20 },
-          { header: "HSNCode", key: "HSNCode", width: 20 },
-          { header: "EANCode", key: "EANCode", width: 20 },
-          { header: "shelfLifeDays", key: "shelfLifeDays", width: 20 },
-          { header: "UOM", key: "UOM", width: 20 },
-          { header: "UOMConversation", key: "UOMConversation", width: 20 },
-          { header: "quantity", key: "quantity", width: 20 },
-          { header: "dateOfAvailability", key: "dateOfAvailability", width: 20 },
-          { header: "active", key: "active", width: 20 },
-          { header: "MRP", key: "MRP", width: 20 },
-          { header: "sellingPrice", key: "sellingPrice", width: 20 },
-          { header: "remarks", key: "remarks", width: 20 },
-          { header: "schemes", key: "schemes", width: 20, type: "list" },
-          { header: "margin", key: "margin", width: 20 },
-      ];
+        worksheet.columns = [
+            {header: "productName", key: "productName", width: 20},
+            {header: "brandName", key: "brandName", width: 20},
+            {header: "productImage", key: "productImage", width: 20},
+            {header: "productCategory", key: "productCategory", width: 20},
+            {header: "SKUCode", key: "SKUCode", width: 20},
+            {header: "HSNCode", key: "HSNCode", width: 20},
+            {header: "EANCode", key: "EANCode", width: 20},
+            {header: "shelfLifeDays", key: "shelfLifeDays", width: 20},
+            {header: "UOM", key: "UOM", width: 20},
+            {header: "UOMConversation", key: "UOMConversation", width: 20},
+            {header: "quantity", key: "quantity", width: 20},
+            {header: "dateOfAvailability", key: "dateOfAvailability", width: 20},
+            {header: "active", key: "active", width: 20},
+            {header: "MRP", key: "MRP", width: 20},
+            {header: "sellingPrice", key: "sellingPrice", width: 20},
+            {header: "remarks", key: "remarks", width: 20},
+            {header: "schemes", key: "schemes", width: 20, type: "list"},
+            {header: "margin", key: "margin", width: 20},
+        ];
 
 // Add Array Rows
-      worksheet.addRows(dummyData);
+//       worksheet.addRows(dummyData);
 
-      dummyData.forEach((x, index) => {
-          worksheet.getCell(`Q${index+2}`).dataValidation = {
-              type: 'list',
-              allowBlank: false,
-              showErrorMessage: true,
-              promptTitle: 'The value must be Approve or Revoke or No-Action',
-              prompt: 'The value must be Approve or Revoke or No-Action',
-              formulae: backToArr
-          };
-      });
+        worksheet.dataValidations.add('Q2:Q9999', {
+            type: 'list',
+            allowBlank: false,
+            showErrorMessage: true,
+            promptTitle: 'The value must be schema List',
+            prompt: 'The value must be schema List',
+            formulae: backToArr
+        });
 
 // res is a Stream object
-      res.setHeader(
-          "Content-Type",
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      );
-      res.setHeader(
-          "Content-Disposition",
-          "attachment; filename=" + "sampleProductionSheet.xlsx"
-      );
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=" + "sampleProductionSheet.xlsx"
+        );
 
-      return workbook.xlsx.write(res).then(function () {
-          res.status(200).end();
-      });
-  }  catch (err) {
-      res.status(500).send({message: err.message || "data does not exist"});
-  }
+        return workbook.xlsx.write(res).then(function () {
+            res.status(200).end();
+        });
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
 };
