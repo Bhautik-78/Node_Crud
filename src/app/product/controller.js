@@ -200,7 +200,7 @@ exports.uploadExcel = async (req, res) => {
                 res.status(400).send({success: false, message: "No Data Found"})
             }
         }else {
-            res.status(400).send({status: false, message: `Row no. ${removePayload.toString()} EAN Code duplicated`})
+            res.status(201).send({status: false, message: `Row no. ${removePayload.toString()} EAN Code duplicated`})
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
