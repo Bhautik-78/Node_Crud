@@ -46,7 +46,7 @@ exports.createApplication = async (req, res) => {
         const {schemaName, EANCode} = req.body;
         const applicationData = await Schema.find({schemaName: schemaName, EANCode: EANCode})
         if(applicationData.length){
-            return res.status(400).send({message: `${schemaName} is duplicate key error`})
+            return res.status(201).send({message: `${schemaName} is already exist`})
         }
         const isCreated = await Schema.create(req.body);
         if(isCreated){
