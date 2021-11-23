@@ -237,21 +237,21 @@ exports.downloadExcel = async (req, res) => {
             {header: "MRP", key: "MRP", width: 20},
             {header: "sellingPrice", key: "sellingPrice", width: 20},
             {header: "remarks", key: "remarks", width: 20},
-            {header: "schemes", key: "schemes", width: 20, type: "list"},
+            // {header: "schemes", key: "schemes", width: 20, type: "list"},
             {header: "margin", key: "margin", width: 20},
         ];
 
 // Add Array Rows
 //       worksheet.addRows(dummyData);
 
-        worksheet.dataValidations.add('Q2:Q9999', {
-            type: 'list',
-            allowBlank: false,
-            showErrorMessage: true,
-            promptTitle: 'The value must be schema List',
-            prompt: 'The value must be schema List',
-            formulae: backToArr
-        });
+        // worksheet.dataValidations.add('Q2:Q9999', {
+        //     type: 'list',
+        //     allowBlank: false,
+        //     showErrorMessage: true,
+        //     promptTitle: 'The value must be schema List',
+        //     prompt: 'The value must be schema List',
+        //     formulae: backToArr
+        // });
 
 // res is a Stream object
         res.setHeader(

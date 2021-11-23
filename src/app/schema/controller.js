@@ -43,7 +43,12 @@ exports.getApplicationForID = async (req, res) => {
 
 exports.createApplication = async (req, res) => {
     try {
-        const isCreated = await Schema.create(req.body)
+        const {schemaName} = req.body;
+        const applicationData = await Schema.find({schemaName: schemaName})
+        if(applicationData.length){
+            return res.status(400).send({message: `${schemaName} is duplicate key error`})
+        }
+        const isCreated = await Schema.create(req.body);
         if(isCreated){
             res.status(200).send({message: "successFully created"})
         }else {
