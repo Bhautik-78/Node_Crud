@@ -30,7 +30,12 @@ exports.getApplication = async (req, res) => {
         }
         const applicationData = await Product.find(query);
         if (applicationData.length) {
-            res.status(200).send(applicationData)
+            const data = applicationData.map((item) => {
+                item = JSON.parse(JSON.stringify(item));
+                delete item.schemaList;
+                return item
+            });
+            res.status(200).send(data)
         } else {
             res.status(201).send({message: "data does not exist"})
         }
