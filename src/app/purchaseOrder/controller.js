@@ -40,6 +40,20 @@ exports.getApplication = async (req, res) => {
     }
 };
 
+exports.getApplicationForID = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const applicationData = await PurchaseOrder.find({_id: id})
+        if(applicationData.length){
+            res.status(200).send(applicationData)
+        }else {
+            res.status(400).send({message: "something went wrong"})
+        }
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
 exports.editApplication = async (req, res) => {
     try {
         const isUpdate = await PurchaseOrder.updateOne({_id: req.params.id}, req.body);
