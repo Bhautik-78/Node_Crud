@@ -4,7 +4,7 @@ require('dotenv').config();
 
 exports.createApplication = async (req, res) => {
     try {
-        const isCreated = await DesPatch.create(req.body)
+        const isCreated = await DesPatch.create(req.body);
         if (isCreated) {
             res.status(200).send({message: "successFully created"})
         } else {
