@@ -8,9 +8,12 @@ const invoiceSchema = new Schema({
     invoiceNumber : Number,
     invoiceDate : String,
     NoOfPackages : Number,
-    Weight : Number,
+    netWeight : Number,
+    grossWeight : Number,
     invoiceValue : Number,
     CGSTValue : Number,
+    SGSTValue : Number,
+    IGSTValue : Number,
     paymentReceived : Number
 });
 
