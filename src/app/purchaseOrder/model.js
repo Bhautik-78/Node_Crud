@@ -29,7 +29,8 @@ const purchaseOrderSchema = new Schema({
     value : Number,
     status : String,
     paymentStatus : String,
-    deliveryStatus : String
+    deliveryStatus : String,
+    itemList : []
 });
 
 module.exports = mongoose.model( "purchaseOrder", purchaseOrderSchema );
