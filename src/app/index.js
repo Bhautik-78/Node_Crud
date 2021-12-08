@@ -3,6 +3,7 @@ const productRouter = require("./product/router");
 const desPatchNoteRouter = require("./despatchNote/router");
 const purChaseOrderRouter = require("./purchaseOrder/router");
 const invoiceRouter = require("./invoice/router");
+const authRouter = require("./auth/router");
 
 module.exports = (app) => {
     app.use("/api/schema", schemaRouter);
@@ -10,4 +11,5 @@ module.exports = (app) => {
     app.use("/api/desPatchNote", desPatchNoteRouter);
     app.use("/api/purChaseOrder", purChaseOrderRouter);
     app.use("/api/invoice", invoiceRouter);
+    app.use("/api/auth", authRouter);
 };

@@ -1,10 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.model("schema");
+const User = require("../auth/model")
 require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
         const {schemaNumber = "", startDate = "", endDate = ""} = req.query;
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken : authorization})
+        let applicationData = []
         let query = {};
         if(schemaNumber !== ''){
             query.schemaNumber = schemaNumber
@@ -16,7 +20,10 @@ exports.getApplication = async (req, res) => {
                 query.date = {$gte:startDate}
             }
         }
-        const applicationData = await Schema.find(query)
+        applicationData = await Schema.find(query)
+        if(!UserDetail.isAdmin){
+            applicationData = applicationData.filter(item => item.userID == UserDetail._id)
+        }
         if(applicationData.length){
             res.status(200).send(applicationData)
         }else {

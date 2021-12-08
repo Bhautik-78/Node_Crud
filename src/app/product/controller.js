@@ -6,11 +6,15 @@ const moment = require("moment")
 const Product = mongoose.model("product");
 const Schema = mongoose.model("schema");
 const dummyData = require("../../JSON/dummyData");
+const User = require("../auth/model");
 require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
         const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = ''} = req.query;
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken : authorization})
+        let applicationData = []
         let query = {};
         if (productName !== '') {
             query.productName = {$regex: new RegExp("^" + productName, "i")}
@@ -28,7 +32,10 @@ exports.getApplication = async (req, res) => {
                 query.dateOfAvailability = {$gte: startDate}
             }
         }
-        const applicationData = await Product.find(query);
+        applicationData = await Product.find(query);
+        if(!UserDetail.isAdmin){
+            applicationData = applicationData.filter(item => item.userID == UserDetail._id)
+        }
         if (applicationData.length) {
             const data = applicationData.map((item) => {
                 item = JSON.parse(JSON.stringify(item));

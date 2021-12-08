@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("../auth/model");
 const Invoice = mongoose.model("invoice");
 require('dotenv').config();
 
@@ -18,6 +19,9 @@ exports.createApplication = async (req, res) => {
 exports.getApplication = async (req, res) => {
     try {
         const {invoiceNumber = '', startDate = '', endDate = ''} = req.query;
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken : authorization})
+        let applicationData = []
         let query = {};
         if (invoiceNumber !== '') {
             query.invoiceNumber =  invoiceNumber
@@ -29,7 +33,10 @@ exports.getApplication = async (req, res) => {
                 query.invoiceDate = {$gte:startDate}
             }
         }
-        const applicationData = await Invoice.find(query);
+        applicationData = await Invoice.find(query);
+        if(!UserDetail.isAdmin){
+            applicationData = applicationData.filter(item => item.userID == UserDetail._id)
+        }
         if(applicationData.length){
             res.status(200).send(applicationData)
         }else {

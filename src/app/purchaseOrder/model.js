@@ -3,6 +3,7 @@ const mongoose = require( "mongoose" );
 const Schema = mongoose.Schema;
 
 const purchaseOrderSchema = new Schema({
+    userID : String,
     PONumber : Number,
     PODate : String,
     EANCode : Number,

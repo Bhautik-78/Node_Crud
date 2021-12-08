@@ -3,6 +3,7 @@ const mongoose = require( "mongoose" );
 const Schema = mongoose.Schema;
 
 const desPatchNoteSchema = new Schema({
+    userID : String,
     DCNumber : String,
     DateOfDeliverChallan : String,
     PONumber : Number,
