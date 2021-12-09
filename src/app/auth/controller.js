@@ -45,9 +45,12 @@ exports.getALlUser = async (req,res) =>{
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization});
         if(!UserDetail || !UserDetail.isAdmin) res.status(400).send("Invalid User Request");
-        const userArray = await User.find({isAdmin : false});
 
-        res.status(200).send({message: "successFully created",userList:userArray})
+        const obj = {isAdmin : false};
+        req.params.id ? obj._id = mongoose.Types.ObjectId(req.params.id) : null;
+        const userArray = await User.find(obj);
+
+        res.status(200).send({message: "successFull",userList:userArray})
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
