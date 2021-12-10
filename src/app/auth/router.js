@@ -9,5 +9,6 @@ router.post("/login", controller.loginAdmin);
 router.post("/create", controller.CreateUser);
 router.get("/getAllUser", controller.getALlUser);
 router.get("/getAllUser/:id", controller.getALlUser);
+router.put("/changeActiveStatus/:id", controller.ChangeActiveStatus);
 
 module.exports = router;

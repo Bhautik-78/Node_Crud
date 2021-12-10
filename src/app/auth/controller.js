@@ -55,3 +55,22 @@ exports.getALlUser = async (req,res) =>{
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
+
+exports.ChangeActiveStatus = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const UserDetail = await User.findOne({_id: id});
+        if(UserDetail._id){
+            const isUpdate = await User.updateOne({_id: id}, {isActive : !UserDetail.isActive});
+            if (isUpdate) {
+                res.status(200).send({message: "successFully Changed Status"})
+            } else {
+                res.status(400).send({message: "something Went Wrong"})
+            }
+        }else {
+            res.status(400).send({message: "User Not Found"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};

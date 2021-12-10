@@ -8,8 +8,15 @@ const userRoleSchema = new Schema({
     mobileNumber:Number,
     email : String,
     passWord : String,
-    isAdmin : Boolean,
-    accessToken : String
+    isAdmin : {
+        type: Boolean,
+        default : false
+    },
+    accessToken : String,
+    isActive : {
+        type: Boolean,
+        default : false
+    }
 });
 
 module.exports = mongoose.model( "userRole", userRoleSchema );
