@@ -157,9 +157,9 @@ const processExcel = workbook => {
 exports.uploadExcel = async (req, res) => {
     try {
         const promiseBuilder = {
-            updateAppPromise: (payload,userId) => new Promise(async (resolve) => {
+            updateAppPromise: (payload,userID) => new Promise(async (resolve) => {
                 payload.dateOfAvailability = moment(payload.dateOfAvailability).format("YYYY-MM-DD")
-                payload.userID = userId;
+                payload.userID = userID;
                 const isCreated = await Product.create(payload);
                 if (isCreated && isCreated._id) {
                     return resolve({success: true})
@@ -168,7 +168,7 @@ exports.uploadExcel = async (req, res) => {
                 }
             })
         };
-        const {userId} = req.body
+        const {userID} = req.body
         const {file} = req;
         const workbook = XLSX.readFile(`./uploads/${file.originalname}`, {
             cellDates: true
@@ -202,7 +202,7 @@ exports.uploadExcel = async (req, res) => {
             }, []);
             if (filteredArr && filteredArr.length > 0) {
                 filteredArr.forEach(item => {
-                    allPromises.push(promiseBuilder.updateAppPromise(item,userId))
+                    allPromises.push(promiseBuilder.updateAppPromise(item,userID))
                 });
                 await Promise.all(allPromises).then(values => {
                     if (values.some(value => value.success)) {
