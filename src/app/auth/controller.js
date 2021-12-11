@@ -64,9 +64,7 @@ exports.forgetPassword = async (req, res) => {
             });
         }
         let mailTransporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
             service: 'gmail',
-            secure : false,
             auth: {
                 user: 'bhautik.bvminfotech@gmail.com',
                 pass: 'bvm@12345'
