@@ -79,7 +79,7 @@ exports.forgetPassword = async (req, res) => {
                 to: req.body.email,
                 subject: "Your Forgotton Password", // Subject line
                 text: "Your Forgotton Password", // plain text body
-                html: `<b>Hello you forgot Your password so below link is for reseting password click below.</b> <link>http://localhost:8080/password-reset/${userDetails._id}</link>` // html body
+                html: `<b>Hello you forgot Your password so below link is for reseting password click below.</b> <link>https://emart-beta.vercel.app/password-reset/${userDetails._id}</link>` // html body
             };
             mailTransporter.sendMail(mailDetails, function (err, data) {
                 if (err) {
