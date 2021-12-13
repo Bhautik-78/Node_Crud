@@ -33,7 +33,7 @@ exports.getApplication = async (req, res) => {
             }
         }
         if(userID !== ''){
-            query.userId = userID
+            query.userID = userID
         }
         applicationData = await Product.find(query);
         if(!UserDetail.isAdmin){

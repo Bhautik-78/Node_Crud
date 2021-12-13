@@ -34,7 +34,7 @@ exports.getApplication = async (req, res) => {
             }
         }
         if(userID !== ''){
-            query.userId = userID
+            query.userID = userID
         }
         applicationData = await Invoice.find(query);
         if(!UserDetail.isAdmin){

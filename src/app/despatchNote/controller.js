@@ -33,7 +33,7 @@ exports.getApplication = async (req, res) => {
                 query.PODate = {$gte:startDate}
             }
         }if(userID !== ''){
-            query.userId = userID
+            query.userID = userID
         }
         applicationData = await DesPatch.find(query);
         if(!UserDetail.isAdmin){
