@@ -11,7 +11,7 @@ require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
-        const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = ''} = req.query;
+        const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = '', userID= ''} = req.query;
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization})
         let applicationData = []
@@ -31,6 +31,9 @@ exports.getApplication = async (req, res) => {
             } else {
                 query.dateOfAvailability = {$gte: startDate}
             }
+        }
+        if(userID !== ''){
+            query.userId = userID
         }
         applicationData = await Product.find(query);
         if(!UserDetail.isAdmin){

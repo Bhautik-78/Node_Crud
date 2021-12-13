@@ -18,7 +18,7 @@ exports.createApplication = async (req, res) => {
 
 exports.getApplication = async (req, res) => {
     try {
-        const {DCNumber = '', startDate = '', endDate = ''} = req.query;
+        const {DCNumber = '', startDate = '', endDate = '', userID = ''} = req.query;
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization})
         let applicationData = []
@@ -32,6 +32,8 @@ exports.getApplication = async (req, res) => {
             }else {
                 query.PODate = {$gte:startDate}
             }
+        }if(userID !== ''){
+            query.userId = userID
         }
         applicationData = await DesPatch.find(query);
         if(!UserDetail.isAdmin){

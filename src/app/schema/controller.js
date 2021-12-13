@@ -5,7 +5,7 @@ require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
-        const {schemaNumber = "", startDate = "", endDate = ""} = req.query;
+        const {schemaNumber = "", startDate = "", endDate = "", userID= ''} = req.query;
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization})
         let applicationData = []
@@ -19,6 +19,9 @@ exports.getApplication = async (req, res) => {
             }else {
                 query.date = {$gte:startDate}
             }
+        }
+        if(userID !== ''){
+            query.userId = userID
         }
         applicationData = await Schema.find(query)
         if(!UserDetail.isAdmin){
