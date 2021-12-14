@@ -19,7 +19,7 @@ exports.loginAdmin = async (req, res) => {
             await User.updateOne({email}, {accessToken: token})
             res.status(200).send({ auth: true, token: token, detail: userDetail });
         }else {
-            res.status(400).send({message: "UserName OR Password is not match"});
+            res.status(201).send({message: "UserName OR Password is not match"});
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
