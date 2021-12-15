@@ -54,7 +54,7 @@ exports.getApplicationForID = async (req, res) => {
 exports.createApplication = async (req, res) => {
     try {
         const {schemaName, EANCode} = req.body;
-        const applicationData = await Schema.find({"schemaName": { $regex : new RegExp("^" + schemaName + "$", "i") }, EANCode: EANCode});
+        const applicationData = await Schema.find({"schemaName": { $regex : new RegExp("^" + schemaName , "i") }, EANCode: EANCode});
         if(applicationData.length){
             return res.status(201).send({message: `${schemaName} is already exist`})
         }
