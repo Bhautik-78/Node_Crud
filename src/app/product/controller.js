@@ -11,9 +11,9 @@ require('dotenv').config();
 
 exports.getApplication = async (req, res) => {
     try {
-        const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = '', userID= ''} = req.query;
+        const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = '', userID = ''} = req.query;
         const {authorization = ''} = req.headers;
-        const UserDetail = await User.findOne({accessToken : authorization})
+        const UserDetail = await User.findOne({accessToken: authorization})
         let applicationData = []
         let query = {};
         if (productName !== '') {
@@ -32,11 +32,11 @@ exports.getApplication = async (req, res) => {
                 query.dateOfAvailability = {$gte: startDate}
             }
         }
-        if(userID !== ''){
+        if (userID !== '') {
             query.userID = userID
         }
         applicationData = await Product.find(query);
-        if(!UserDetail.isAdmin){
+        if (!UserDetail.isAdmin) {
             applicationData = applicationData.filter(item => item.userID == UserDetail._id)
         }
         if (applicationData.length) {
@@ -160,7 +160,7 @@ const processExcel = workbook => {
 exports.uploadExcel = async (req, res) => {
     try {
         const promiseBuilder = {
-            updateAppPromise: (payload,userID) => new Promise(async (resolve) => {
+            updateAppPromise: (payload, userID) => new Promise(async (resolve) => {
                 payload.dateOfAvailability = moment(payload.dateOfAvailability).format("YYYY-MM-DD")
                 payload.userID = userID;
                 const isCreated = await Product.create(payload);
@@ -205,7 +205,7 @@ exports.uploadExcel = async (req, res) => {
             }, []);
             if (filteredArr && filteredArr.length > 0) {
                 filteredArr.forEach(item => {
-                    allPromises.push(promiseBuilder.updateAppPromise(item,userID))
+                    allPromises.push(promiseBuilder.updateAppPromise(item, userID))
                 });
                 await Promise.all(allPromises).then(values => {
                     if (values.some(value => value.success)) {
@@ -286,3 +286,37 @@ exports.downloadExcel = async (req, res) => {
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
+
+exports.changeStatusPriceApproval = async (req, res) => {
+    try {
+        const promiseBuilder = {
+            updateAppPromise: (payload) => new Promise(async (resolve) => {
+                const isDetail = await Product.findOne({_id: payload});
+                const isCreated = await Product.updateOne({_id: mongoose.Types.ObjectId(payload)}, {priceApproval: !isDetail.priceApproval});
+                if (isCreated && isCreated.ok) {
+                    return resolve({success: true})
+                } else {
+                    return resolve({success: false})
+                }
+            })
+        };
+        const {productIdList} = req.body;
+        const allPromises = [];
+        if (productIdList && productIdList.length > 0) {
+            productIdList.forEach(item => {
+                allPromises.push(promiseBuilder.updateAppPromise(item))
+            });
+            await Promise.all(allPromises).then(values => {
+                if (values.some(value => value.success)) {
+                    res.status(200).send({success: true, message: "Successfully updated"})
+                } else {
+                    res.status(400).send({success: false, message: "There are not records are found!"})
+                }
+            })
+        } else {
+            res.status(400).send({success: false, message: "No Data Found"});
+        }
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+}
