@@ -44,10 +44,12 @@ exports.CreateUser = async (req,res) => {
 exports.editUser = async (req, res) => {
     try {
         const { id } = req.params;
-        req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
+        if(req.body.passWord){
+            req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
+        }
         const isUpdate = await User.updateOne({_id: id}, req.body);
         if (isUpdate) {
-            res.status(200).send({message: "successFully updated PassWord"})
+            res.status(200).send({message: "successFully updated data"})
         } else {
             res.status(400).send({message: "something Went Wrong"})
         }
