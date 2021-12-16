@@ -290,9 +290,8 @@ exports.downloadExcel = async (req, res) => {
 exports.changeStatusPriceApproval = async (req, res) => {
     try {
         const promiseBuilder = {
-            updateAppPromise: (payload) => new Promise(async (resolve) => {
-                const isDetail = await Product.findOne({_id: payload});
-                const isCreated = await Product.updateOne({_id: mongoose.Types.ObjectId(payload)}, {priceApproval: !isDetail.priceApproval});
+            updateAppPromise: (payload, priceApproval) => new Promise(async (resolve) => {
+                const isCreated = await Product.updateOne({_id: mongoose.Types.ObjectId(payload)}, {priceApproval: priceApproval});
                 if (isCreated && isCreated.ok) {
                     return resolve({success: true})
                 } else {
@@ -300,11 +299,11 @@ exports.changeStatusPriceApproval = async (req, res) => {
                 }
             })
         };
-        const {productIdList} = req.body;
+        const {productIdList, priceApproval} = req.body;
         const allPromises = [];
         if (productIdList && productIdList.length > 0) {
             productIdList.forEach(item => {
-                allPromises.push(promiseBuilder.updateAppPromise(item))
+                allPromises.push(promiseBuilder.updateAppPromise(item, priceApproval))
             });
             await Promise.all(allPromises).then(values => {
                 if (values.some(value => value.success)) {
