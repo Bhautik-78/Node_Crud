@@ -7,6 +7,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const config = require('../../config');
 
+const path = require('path');
+const fs = require('fs');
+
 exports.loginAdmin = async (req, res) => {
     try {
         const {email, passWord} = req.body;
@@ -26,17 +29,30 @@ exports.loginAdmin = async (req, res) => {
     }
 };
 
-exports.CreateUser = async (req,res) => {
+exports.CreateUser = async (req, res) => {
+    let file = req.file;
+    var extname = path.extname(file.originalname);
+    let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
+    let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
+    let finalpath = path.join(process.cwd(), filename);
+
     try {
-        req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
-        // req.body.isAdmin = false;
-        const isCreated = await User.create(req.body);
-        if (isCreated) {
-            res.status(200).send({message: "successFully created"})
-        } else {
-            res.status(400).send({message: "something Went Wrong"})
+        if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
+            fs.writeFileSync(finalpath, file.buffer);
+            req.body.mobileNumber = Number(req.body.mobileNumber);
+            req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
+            req.body.userImg = filename;
+            const isCreated = await User.create(req.body);
+            if (isCreated) {
+                res.status(200).send({message: "successFully created"})
+            } else {
+                fs.unlinkSync(finalpath);
+                res.status(400).send({message: "something Went Wrong"})
+            }
         }
-    }catch (err) {
+    } catch (err) {
+        fs.unlinkSync(finalpath);
+        console.log('Here in Create catch',err.message)
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };

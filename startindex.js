@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 
 const cors = require("cors");
 const path = require("path");
+const multer = require('multer');
 const config = require("./src/config");
 const customResponses = require("./src/middlewares/customResponses");
 
@@ -18,6 +19,7 @@ app.set('views', path.join(__dirname, '/src/views'));
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(urlencodedParser);
 app.use(bodyParser.json());
+app.use(multer().single('file'));
 
 app.set("env", ENV);
 

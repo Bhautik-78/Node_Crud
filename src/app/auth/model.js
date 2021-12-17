@@ -33,6 +33,7 @@ const userRoleSchema = new Schema({
         type: Boolean,
         default: false
     },
+    userImg : String,
     accessToken: String,
     isActive: {
         type: Boolean,
