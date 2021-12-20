@@ -30,20 +30,22 @@ exports.loginAdmin = async (req, res) => {
 };
 
 exports.CreateUser = async (req, res) => {
-    let file = req.file;
-    var extname = path.extname(file.originalname);
-    let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
-    let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
-    let finalpath = path.join(process.cwd(), filename);
     try {
+        let file = req.file;
+        if(file){
+            var extname = path.extname(file.originalname);
+            let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
+            let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
+            let finalpath = path.join(process.cwd(), filename);
+            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
+                fs.writeFileSync(finalpath, file.buffer);
+                req.body.userImg = filename;
+            }else {
+                req.body.userImg = "";
+            }
+        }
         req.body.mobileNumber = Number(req.body.mobileNumber);
         req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
-        if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
-            fs.writeFileSync(finalpath, file.buffer);
-            req.body.userImg = filename;
-        }else {
-            req.body.userImg = "";
-        }
         const isCreated = await User.create(req.body);
         if (isCreated) {
             res.status(200).send({message: "successFully created"})
@@ -58,33 +60,34 @@ exports.CreateUser = async (req, res) => {
 };
 
 exports.editUser = async (req, res) => {
-    let file = req.file;
-    var extname = file && path.extname(file.originalname);
-    let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
-    let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
-    let finalpath = path.join(process.cwd(), filename);
     try {
+        let file = req.file;
         const {id} = req.params;
         const isUser = await User.findOne({_id: id});
         if (!isUser) return res.status(400).send({message: "User is not found"});
-        if(isUser.userImg){
-            let oldimagedelete = path.join(process.cwd(), isUser.userImg);
-            fs.unlinkSync(oldimagedelete);
+        if(file){
+            if(isUser.userImg){
+                let oldImageDelete = path.join(process.cwd(), isUser.userImg);
+                fs.unlinkSync(oldImageDelete);
+            }
+            var extname = file && path.extname(file.originalname);
+            let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
+            let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
+            let finalpath = path.join(process.cwd(), filename);
+            if (file !== undefined && file !== null) {
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
+                    fs.writeFileSync(finalpath, file.buffer);
+                    req.body.userImg = filename;
+                }
+            }
         }
         if (req.body.passWord) {
             req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
-        }
-        if (file !== undefined && file !== null) {
-            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
-                fs.writeFileSync(finalpath, file.buffer);
-                req.body.userImg = filename;
-            }
         }
         const isUpdate = await User.updateOne({_id: id}, req.body);
         if (isUpdate) {
             res.status(200).send({message: "successFully updated data"})
         } else {
-            fs.unlinkSync(finalpath);
             res.status(400).send({message: "something Went Wrong"})
         }
     } catch (err) {
