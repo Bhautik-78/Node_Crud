@@ -34,11 +34,8 @@ exports.CreateUser = async (req, res) => {
         let file = req.file;
         if(file){
             var extname = path.extname(file.originalname);
-            let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
-            let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
-            let finalpath = path.join(process.cwd(), filename);
+            let filename = `/uploads/userimage/${file.originalname}`;
             if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
-                fs.writeFileSync(finalpath, file.buffer);
                 req.body.userImg = filename;
             }else {
                 req.body.userImg = "";
@@ -50,11 +47,9 @@ exports.CreateUser = async (req, res) => {
         if (isCreated) {
             res.status(200).send({message: "successFully created"})
         } else {
-            fs.unlinkSync(finalpath);
             res.status(400).send({message: "something Went Wrong"})
         }
     } catch (err) {
-        fs.unlinkSync(finalpath);
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
@@ -65,20 +60,15 @@ exports.editUser = async (req, res) => {
         const {id} = req.params;
         const isUser = await User.findOne({_id: id});
         if (!isUser) return res.status(400).send({message: "User is not found"});
-        if(file){
-            if(isUser.userImg){
+        if (file) {
+            if (isUser.userImg) {
                 let oldImageDelete = path.join(process.cwd(), isUser.userImg);
                 fs.unlinkSync(oldImageDelete);
             }
             var extname = file && path.extname(file.originalname);
-            let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
-            let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
-            let finalpath = path.join(process.cwd(), filename);
-            if (file !== undefined && file !== null) {
-                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
-                    fs.writeFileSync(finalpath, file.buffer);
-                    req.body.userImg = filename;
-                }
+            let filename = `/uploads/userimage/${file.originalname}`;
+            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
+                req.body.userImg = filename;
             }
         }
         if (req.body.passWord) {
