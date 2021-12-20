@@ -35,24 +35,24 @@ exports.CreateUser = async (req, res) => {
     let filename = '/uploads/userimage/' + 'file_' + Date.now() + extname;
     let filenamefordb = 'https://vuecrud-etj2v.ondigitalocean.app/uploads/userimage/' + 'file_' + Date.now() + extname;
     let finalpath = path.join(process.cwd(), filename);
-
     try {
+        req.body.mobileNumber = Number(req.body.mobileNumber);
+        req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
         if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
             fs.writeFileSync(finalpath, file.buffer);
-            req.body.mobileNumber = Number(req.body.mobileNumber);
-            req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
             req.body.userImg = filename;
-            const isCreated = await User.create(req.body);
-            if (isCreated) {
-                res.status(200).send({message: "successFully created"})
-            } else {
-                fs.unlinkSync(finalpath);
-                res.status(400).send({message: "something Went Wrong"})
-            }
+        }else {
+            req.body.userImg = "";
+        }
+        const isCreated = await User.create(req.body);
+        if (isCreated) {
+            res.status(200).send({message: "successFully created"})
+        } else {
+            fs.unlinkSync(finalpath);
+            res.status(400).send({message: "something Went Wrong"})
         }
     } catch (err) {
         fs.unlinkSync(finalpath);
-        console.log('Here in Create catch',err.message)
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
@@ -65,45 +65,27 @@ exports.editUser = async (req, res) => {
     let finalpath = path.join(process.cwd(), filename);
     try {
         const {id} = req.params;
-        // const _id = id;
-        // const isUser = await User.findById(id);
         const isUser = await User.findOne({_id: id});
         if (!isUser) return res.status(400).send({message: "User is not found"});
-        let oldimagedelete = path.join(process.cwd(), isUser.userImg);
-        console.log('oldimagedelete path ', oldimagedelete);
+        if(isUser.userImg){
+            let oldimagedelete = path.join(process.cwd(), isUser.userImg);
+            fs.unlinkSync(oldimagedelete);
+        }
+        if (req.body.passWord) {
+            req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
+        }
         if (file !== undefined && file !== null) {
-            console.log('Inside thw file  ');
             if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
-                console.log('Inside thw file  type ok');
-                fs.unlinkSync(oldimagedelete);
-                console.log('Old image unlinked');
                 fs.writeFileSync(finalpath, file.buffer);
-                console.log('New image added in upload folder');
-                if (req.body.passWord) {
-                    req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
-                }
                 req.body.userImg = filename;
-                console.log('New Req.Body -> ',req.body);
-                const isUpdate = await User.updateOne({_id: id}, req.body);
-                if (isUpdate) {
-                    res.status(200).send({message: "successFully updated data"})
-                } else {
-                    fs.unlinkSync(finalpath);
-                    res.status(400).send({message: "something Went Wrong"})
-                }
             }
-        }else{
-            if (req.body.passWord) {
-                req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
-            }
-            console.log('New Req.Body -> ',req.body);
-            const isUpdate = await User.updateOne({_id: id}, req.body);
-            if (isUpdate) {
-                res.status(200).send({message: "successFully updated data"})
-            } else {
-                fs.unlinkSync(finalpath);
-                res.status(400).send({message: "something Went Wrong"})
-            }
+        }
+        const isUpdate = await User.updateOne({_id: id}, req.body);
+        if (isUpdate) {
+            res.status(200).send({message: "successFully updated data"})
+        } else {
+            fs.unlinkSync(finalpath);
+            res.status(400).send({message: "something Went Wrong"})
         }
     } catch (err) {
         fs.unlinkSync(finalpath);
