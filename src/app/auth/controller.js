@@ -88,7 +88,6 @@ exports.editUser = async (req, res) => {
             res.status(400).send({message: "something Went Wrong"})
         }
     } catch (err) {
-        fs.unlinkSync(finalpath);
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
