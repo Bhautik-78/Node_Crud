@@ -20,11 +20,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post("/create",validateToken,  controller.createApplication);
-router.get("/get",validateToken,  controller.getApplication)
-router.get("/get/:id",validateToken, controller.getApplicationForID)
+router.get("/get",validateToken,  controller.getApplication);
+router.get("/get/:id",validateToken, controller.getApplicationForID);
 router.put("/edit/:id",validateToken, controller.editApplication);
-router.delete("/delete/:id",validateToken, controller.deleteApplication)
-router.get("/download", controller.downloadExcel)
-router.post("/excelUpload", upload.single("file"), controller.uploadExcel)
+router.delete("/delete/:id",validateToken, controller.deleteApplication);
+router.get("/download", controller.downloadExcel);
+router.post("/excelUpload",validateToken, upload.single("file"), controller.uploadExcel);
 
 module.exports = router;
