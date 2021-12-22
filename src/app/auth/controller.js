@@ -227,18 +227,38 @@ exports.getCountDetail = async (req, res) => {
         }
         if(InvoiceDetail.length){
             if(roleDetail.isAdmin) {
-                invoiceDetailObject.totalInvoice = InvoiceDetail.length
+                let total = 0;
+                InvoiceDetail.forEach(item => {
+                    total += item.invoiceValue;
+                });
                 const InvoiceDetailLastTen = InvoiceDetail.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
                 });
+                let daysTotal = 0;
+                InvoiceDetailLastTen.forEach(item => {
+                    daysTotal += item.invoiceValue;
+                });
                 invoiceDetailObject.last10DayInvoice = InvoiceDetailLastTen.length;
+                invoiceDetailObject.totalInvoice = InvoiceDetail.length;
+                invoiceDetailObject.sumOfTotalInvoice = total;
+                invoiceDetailObject.sumOfDaysInvoice = daysTotal;
             }else {
                 const userInvoiceDetail = InvoiceDetail.filter(item => item.userID === userId)
-                invoiceDetailObject.totalInvoice = userInvoiceDetail.length
+                let total = 0;
+                userInvoiceDetail.forEach(item => {
+                    total += item.invoiceValue;
+                });
                 const userInvoiceDetailLastTen = userInvoiceDetail.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
                 });
+                let daysTotal = 0;
+                userInvoiceDetailLastTen.forEach(item => {
+                    daysTotal += item.invoiceValue;
+                });
+                invoiceDetailObject.totalInvoice = userInvoiceDetail.length
                 invoiceDetailObject.last10DayInvoice = userInvoiceDetailLastTen.length;
+                invoiceDetailObject.sumOfTotalInvoice = total;
+                invoiceDetailObject.sumOfDaysInvoice = daysTotal;
             }
             countDetail.push(invoiceDetailObject)
         }
