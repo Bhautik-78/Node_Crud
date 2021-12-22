@@ -17,6 +17,8 @@ const userSchema = new Schema({
     nararation : String,
     active : Boolean,
     schemaNumber : Number
+}, {
+    timestamps: true,
 });
 
 module.exports = mongoose.model( "schema", userSchema );

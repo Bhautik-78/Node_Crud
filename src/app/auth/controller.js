@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const nodemailer = require('nodemailer');
+const moment = require('moment')
 const User = mongoose.model("userRole");
+const DesPatch = mongoose.model("desPatchNote");
+const Invoice = mongoose.model("invoice");
+const Product = mongoose.model("product");
+const PurchaseOrder = mongoose.model("purchaseOrder");
+const Schema = mongoose.model("schema");
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
@@ -161,3 +167,134 @@ exports.ChangeActiveStatus = async (req, res) => {
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
+
+exports.getCountDetail = async (req, res) => {
+    try{
+        const userDetail = await User.find({});
+        const DesPatchDetail = await DesPatch.find({});
+        const InvoiceDetail = await Invoice.find({});
+        const ProductDetail = await Product.find({});
+        const PurchaseOrderDetail = await PurchaseOrder.find({});
+        const SchemaDetail = await Schema.find({});
+
+        const {authorization = ''} = req.headers;
+        const roleDetail = await User.findOne({accessToken : authorization});
+        const userId = roleDetail._id;
+        const countDetail = []
+
+        const userDetailObject = {};
+        const despatchDetailObject = {};
+        const invoiceDetailObject = {};
+        const productDetailObject = {};
+        const PurchaseOrderDetailObject = {};
+        const SchemaDetailObject = {};
+
+        if(userDetail.length){
+            if(roleDetail.isAdmin){
+                const user = userDetail && userDetail.filter(item => item.isAdmin === false);
+                if(user.length) {
+                    const activeUser = user && user.filter(item => item.isActive === true);
+                    const inActiveUser = user && user.filter(item => item.isActive === false);
+                    if (user.length) {
+                        userDetailObject.totalUser = user.length
+                    }
+                    if (activeUser.length) {
+                        userDetailObject.activeUser = activeUser.length
+                    }
+                    if (inActiveUser.length) {
+                        userDetailObject.inActiveUser = inActiveUser.length
+                    }
+                }
+                countDetail.push(userDetailObject)
+            }
+        }
+        if(DesPatchDetail.length){
+            if(roleDetail.isAdmin) {
+                despatchDetailObject.totalDespatch = DesPatchDetail.length
+                const DesPatchDetailLastTen = DesPatchDetail.filter((item) => {
+                        return item.createdAt >= moment().add(-10, "days");
+                });
+                despatchDetailObject.last10DayDespatch = DesPatchDetailLastTen.length
+            }else {
+                const userDespatchDetail = DesPatchDetail.filter(item => item.userID === userId)
+                despatchDetailObject.totalDespatch = userDespatchDetail.length
+                const userDespatchDetailLastTen = userDespatchDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                despatchDetailObject.last10DayDespatch = userDespatchDetailLastTen.length
+            }
+            countDetail.push(despatchDetailObject)
+        }
+        if(InvoiceDetail.length){
+            if(roleDetail.isAdmin) {
+                invoiceDetailObject.totalInvoice = InvoiceDetail.length
+                const InvoiceDetailLastTen = InvoiceDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                invoiceDetailObject.last10DayInvoice = InvoiceDetailLastTen.length;
+            }else {
+                const userInvoiceDetail = InvoiceDetail.filter(item => item.userID === userId)
+                invoiceDetailObject.totalInvoice = userInvoiceDetail.length
+                const userInvoiceDetailLastTen = userInvoiceDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                invoiceDetailObject.last10DayInvoice = userInvoiceDetailLastTen.length;
+            }
+            countDetail.push(invoiceDetailObject)
+        }
+        if(ProductDetail.length){
+            if(roleDetail.isAdmin) {
+                productDetailObject.totalProduct = ProductDetail.length
+                const ProductDetailLastTen = ProductDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                productDetailObject.last10DayProductDetail = ProductDetailLastTen.length;
+            }else {
+                const userProductDetail = ProductDetail.filter(item => item.userID === userId)
+                productDetailObject.totalProduct = userProductDetail.length
+                const userProductDetailLastTen = userProductDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                productDetailObject.last10DayProductDetail = userProductDetailLastTen.length;
+            }
+            countDetail.push(productDetailObject)
+        }
+        if(PurchaseOrderDetail.length){
+            if(roleDetail.isAdmin) {
+                PurchaseOrderDetailObject.totalPurchaseOrder = PurchaseOrderDetail.length
+                const PurchaseOrderDetailLastTen = PurchaseOrderDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                PurchaseOrderDetailObject.last10DayPurchaseOrderDetail = PurchaseOrderDetailLastTen.length;
+            }else {
+                const userPurchaseOrder = PurchaseOrderDetail.filter(item => item.userID === userId)
+                PurchaseOrderDetailObject.totalPurchaseOrder = userPurchaseOrder.length
+                const userPurchaseOrderLastTen = userPurchaseOrder.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                PurchaseOrderDetailObject.last10DayPurchaseOrderDetail = userPurchaseOrderLastTen.length;
+            }
+            countDetail.push(PurchaseOrderDetailObject)
+        }
+        if(SchemaDetail.length){
+            if(roleDetail.isAdmin) {
+                SchemaDetailObject.totalSchema = SchemaDetail.length
+                const SchemaDetailLastTen = SchemaDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                SchemaDetailObject.last10DaySchemaDetail = SchemaDetailLastTen.length;
+            }else {
+                const userSchema = SchemaDetail.filter(item => item.userID === userId)
+                SchemaDetailObject.totalSchema = userSchema.length
+                const userSchemaLastTen = userSchema.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                SchemaDetailObject.last10DaySchemaDetail = userSchemaLastTen.length;
+            }
+            countDetail.push(SchemaDetailObject)
+        }
+        res.status(200).send({message: "successFull",countList: countDetail})
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+}

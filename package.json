@@ -22,7 +22,7 @@
     "moment": "^2.29.1",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.15",
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.15",
     "winston": "^2.3.1",
     "xlsx": "^0.17.3"
   },

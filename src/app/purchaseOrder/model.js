@@ -32,6 +32,8 @@ const purchaseOrderSchema = new Schema({
     paymentStatus : String,
     deliveryStatus : String,
     itemList : []
+}, {
+    timestamps: true,
 });
 
 module.exports = mongoose.model( "purchaseOrder", purchaseOrderSchema );

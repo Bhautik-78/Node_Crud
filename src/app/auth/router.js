@@ -4,6 +4,8 @@ const multer =require("multer");
 
 const controller = require( "./controller" );
 
+const validateToken = require("../../middlewares/validateToken")
+
 const router = express.Router( );
 const storage = multer.diskStorage({
     destination(req, file, cb) {
@@ -22,5 +24,6 @@ router.post( "/forgetPassword", controller.forgetPassword );
 router.get("/getAllUser", controller.getALlUser);
 router.get("/getAllUser/:id", controller.getALlUser);
 router.put("/changeActiveStatus/:id", controller.ChangeActiveStatus);
+router.get("/getCountDetail",validateToken, controller.getCountDetail)
 
 module.exports = router;

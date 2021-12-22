@@ -16,6 +16,8 @@ const invoiceSchema = new Schema({
     SGSTValue : Number,
     IGSTValue : Number,
     paymentReceived : Number
+}, {
+    timestamps: true,
 });
 
 module.exports = mongoose.model( "invoice", invoiceSchema );

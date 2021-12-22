@@ -13,6 +13,8 @@ const desPatchNoteSchema = new Schema({
     DriverName : String,
     DriverContact: Number,
     VehicleNumber : String
+}, {
+    timestamps: true,
 });
 
 module.exports = mongoose.model( "desPatchNote", desPatchNoteSchema );
