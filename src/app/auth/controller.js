@@ -7,6 +7,8 @@ const Invoice = mongoose.model("invoice");
 const Product = mongoose.model("product");
 const PurchaseOrder = mongoose.model("purchaseOrder");
 const Schema = mongoose.model("schema");
+const creditMemoSchema = mongoose.model("creditMemo");
+const debitMemoSchema = mongoose.model("debitMemo");
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
@@ -176,11 +178,13 @@ exports.getCountDetail = async (req, res) => {
         const ProductDetail = await Product.find({});
         const PurchaseOrderDetail = await PurchaseOrder.find({});
         const SchemaDetail = await Schema.find({});
+        const CreditDetail = await creditMemoSchema.find({});
+        const DebitDetail = await debitMemoSchema.find({});
 
         const {authorization = ''} = req.headers;
         const roleDetail = await User.findOne({accessToken : authorization});
         const userId = roleDetail._id;
-        const countDetail = []
+        const countDetail = [];
 
         const userDetailObject = {};
         const despatchDetailObject = {};
@@ -188,6 +192,8 @@ exports.getCountDetail = async (req, res) => {
         const productDetailObject = {};
         const PurchaseOrderDetailObject = {};
         const SchemaDetailObject = {};
+        const creditDetailObject = {};
+        const debitDetailObject = {};
 
         if(userDetail.length){
             if(roleDetail.isAdmin){
@@ -312,6 +318,40 @@ exports.getCountDetail = async (req, res) => {
                 SchemaDetailObject.last10DaySchemaDetail = userSchemaLastTen.length;
             }
             countDetail.push(SchemaDetailObject)
+        }
+        if(CreditDetail.length){
+            if(roleDetail.isAdmin) {
+                creditDetailObject.totalCredit = CreditDetail.length;
+                const CreditDetailLastTen = CreditDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                creditDetailObject.last10DayCreditDetail = CreditDetailLastTen.length;
+            }else {
+                const userCredit = CreditDetail.filter(item => item.userID.toString() === userId.toString())
+                creditDetailObject.totalCredit = userCredit.length;
+                const userCreditLastTen = userCredit.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                creditDetailObject.last10DayCreditDetail = userCreditLastTen.length;
+            }
+            countDetail.push(creditDetailObject)
+        }
+        if(DebitDetail.length){
+            if(roleDetail.isAdmin) {
+                debitDetailObject.totalDebit = DebitDetail.length;
+                const DebitDetailLastTen = DebitDetail.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                debitDetailObject.last10DayDebitDetail = DebitDetailLastTen.length;
+            }else {
+                const userDebit = DebitDetail.filter(item => item.userID.toString() === userId.toString())
+                debitDetailObject.totalDebit = userDebit.length;
+                const userDebitLastTen = userDebit.filter((item) => {
+                    return item.createdAt >= moment().add(-10, "days");
+                });
+                debitDetailObject.last10DayDebitDetail = userDebitLastTen.length;
+            }
+            countDetail.push(debitDetailObject)
         }
         res.status(200).send({message: "successFull",countList: countDetail})
     }catch (err) {
