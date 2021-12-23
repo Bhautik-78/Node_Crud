@@ -216,7 +216,7 @@ exports.getCountDetail = async (req, res) => {
         }
         if(DesPatchDetail.length){
             if(roleDetail.isAdmin) {
-                despatchDetailObject.totalDespatch = DesPatchDetail.length
+                despatchDetailObject.totalDespatch = DesPatchDetail.length;
                 const DesPatchDetailLastTen = DesPatchDetail.filter((item) => {
                         return item.createdAt >= moment().add(-10, "days");
                 });
@@ -270,14 +270,14 @@ exports.getCountDetail = async (req, res) => {
         }
         if(ProductDetail.length){
             if(roleDetail.isAdmin) {
-                productDetailObject.totalProduct = ProductDetail.length
+                productDetailObject.totalProduct = ProductDetail.length;
                 const ProductDetailLastTen = ProductDetail.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
                 });
                 productDetailObject.last10DayProductDetail = ProductDetailLastTen.length;
             }else {
                 const userProductDetail = ProductDetail.filter(item => item.userID.toString() === userId.toString())
-                productDetailObject.totalProduct = userProductDetail.length
+                productDetailObject.totalProduct = userProductDetail.length;
                 const userProductDetailLastTen = userProductDetail.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
                 });
@@ -287,14 +287,14 @@ exports.getCountDetail = async (req, res) => {
         }
         if(PurchaseOrderDetail.length){
             if(roleDetail.isAdmin) {
-                PurchaseOrderDetailObject.totalPurchaseOrder = PurchaseOrderDetail.length
+                PurchaseOrderDetailObject.totalPurchaseOrder = PurchaseOrderDetail.length;
                 const PurchaseOrderDetailLastTen = PurchaseOrderDetail.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
                 });
                 PurchaseOrderDetailObject.last10DayPurchaseOrderDetail = PurchaseOrderDetailLastTen.length;
             }else {
                 const userPurchaseOrder = PurchaseOrderDetail.filter(item => item.userID.toString() === userId.toString())
-                PurchaseOrderDetailObject.totalPurchaseOrder = userPurchaseOrder.length
+                PurchaseOrderDetailObject.totalPurchaseOrder = userPurchaseOrder.length;
                 const userPurchaseOrderLastTen = userPurchaseOrder.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
                 });
@@ -357,4 +357,4 @@ exports.getCountDetail = async (req, res) => {
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
-}
+};
