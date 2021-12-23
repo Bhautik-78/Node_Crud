@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const nodemailer = require('nodemailer');
-const moment = require('moment')
+const moment = require('moment');
 const User = mongoose.model("userRole");
-const DesPatch = mongoose.model("desPatchNote");
-const Invoice = mongoose.model("invoice");
-const Product = mongoose.model("product");
-const PurchaseOrder = mongoose.model("purchaseOrder");
-const Schema = mongoose.model("schema");
-const creditMemoSchema = mongoose.model("creditMemo");
-const debitMemoSchema = mongoose.model("debitMemo");
+const DesPatch = require("../despatchNote/model");
+const Invoice = require("../invoice/model");
+const Product = require("../product/model");
+const PurchaseOrder = require("../purchaseOrder/model");
+const Schema = require("../schema/model");
+const creditMemoSchema = require("../creditmemo/model");
+const debitMemoSchema = require("../debitmemo/model");
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
