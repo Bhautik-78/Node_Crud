@@ -310,8 +310,8 @@ exports.getCountDetail = async (req, res) => {
                 });
                 SchemaDetailObject.last10DaySchemaDetail = SchemaDetailLastTen.length;
             }else {
-                const userSchema = SchemaDetail.filter(item => item.userID.toString() === userId.toString())
-                SchemaDetailObject.totalSchema = userSchema.length
+                const userSchema = SchemaDetail.filter(item => item.userID.toString() === userId.toString());
+                SchemaDetailObject.totalSchema = userSchema.length;
                 const userSchemaLastTen = userSchema.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
                 });
@@ -327,7 +327,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 creditDetailObject.last10DayCreditDetail = CreditDetailLastTen.length;
             }else {
-                const userCredit = CreditDetail.filter(item => item.userID.toString() === userId.toString())
+                const userCredit = CreditDetail.filter(item => item.userID.toString() === userId.toString());
                 creditDetailObject.totalCredit = userCredit.length;
                 const userCreditLastTen = userCredit.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
@@ -344,7 +344,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 debitDetailObject.last10DayDebitDetail = DebitDetailLastTen.length;
             }else {
-                const userDebit = DebitDetail.filter(item => item.userID.toString() === userId.toString())
+                const userDebit = DebitDetail.filter(item => item.userID.toString() === userId.toString());
                 debitDetailObject.totalDebit = userDebit.length;
                 const userDebitLastTen = userDebit.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
