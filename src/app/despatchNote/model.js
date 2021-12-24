@@ -12,7 +12,13 @@ const desPatchNoteSchema = new Schema({
     TransporterDetails : String,
     DriverName : String,
     DriverContact: Number,
-    VehicleNumber : String
+    VehicleNumber : String,
+    eWayBillNumber : Number,
+    totalNoOfPackages : Number,
+    netWeightInKgs : Number,
+    grossWeightInKgs : Number,
+    deliveryLocation : String,
+    eMetroRepresentativeID : String
 }, {
     timestamps: true,
 });
