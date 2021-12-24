@@ -33,7 +33,7 @@ const userRoleSchema = new Schema({
     panNo: Number,
     bankName : String,
     accountNumber: Number,
-    IFSCCode : Number,
+    IFSCCode : String,
     paymentTerms: String,
     shippingTerms: String,
     GST: String,
