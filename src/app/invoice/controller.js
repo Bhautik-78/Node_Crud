@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../auth/model");
+const paymentReport = require("../vendorPaymentReport/model");
 const excel = require("exceljs");
 const XLSX = require("xlsx");
 const moment = require("moment")
@@ -230,3 +231,49 @@ exports.uploadExcel = async (req, res) => {
     }
 };
 
+exports.getInvoiceNumList = async (req, res) => {
+    try {
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken : authorization})
+        if(UserDetail){
+            const applicationData = await Invoice.find({userID: UserDetail._id})
+            if(applicationData.length){
+                const numList = applicationData.map(item => item.invoiceNumber)
+                res.status(200).send(numList)
+            }else {
+                res.status(201).send({message: "data does not exist"})
+            }
+        }else {
+            res.status(400).send({message: "something Went Wrong"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+exports.getInvoiceValue = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken : authorization});
+        const vendorData = await paymentReport.find({userId: UserDetail._id});
+        const applicationData = await Invoice.findOne({invoiceNumber: id});
+        if(applicationData){
+            const invoiceValue = applicationData.invoiceValue;
+            if(vendorData.length){
+                let total = 0;
+                vendorData.forEach(item => {
+                    total += item.amount;
+                });
+                const finalValue = invoiceValue - total;
+                res.status(200).send({invoiceValue : finalValue})
+            }else {
+                res.status(200).send({invoiceValue : invoiceValue})
+            }
+        }else {
+            res.status(400).send({message: "something Went Wrong"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};

@@ -26,5 +26,7 @@ router.put("/edit/:id",validateToken, controller.editApplication);
 router.delete("/delete/:id",validateToken, controller.deleteApplication);
 router.get("/download", controller.downloadExcel);
 router.post("/excelUpload",validateToken, upload.single("file"), controller.uploadExcel);
+router.get("/getInvoiceNumList", validateToken, controller.getInvoiceNumList)
+router.get("/getInvoiceValue/:id", validateToken, controller.getInvoiceValue)
 
 module.exports = router;

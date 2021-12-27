@@ -6,7 +6,10 @@ const invoiceSchema = new Schema({
     userID : String,
     PONumber : Number,
     PODate : String,
-    invoiceNumber : Number,
+    invoiceNumber : {
+        type: Number,
+        unique: true,
+    },
     invoiceDate : String,
     NoOfPackages : Number,
     netWeight : Number,

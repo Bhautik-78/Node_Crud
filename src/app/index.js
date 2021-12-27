@@ -6,6 +6,7 @@ const invoiceRouter = require("./invoice/router");
 const authRouter = require("./auth/router");
 const debitMemoRouter = require("./debitmemo/router");
 const creditMemoRouter = require("./creditmemo/router");
+const paymentReportRouter = require("./vendorPaymentReport/router");
 
 module.exports = (app) => {
     app.use("/api/schema", schemaRouter);
@@ -16,4 +17,5 @@ module.exports = (app) => {
     app.use("/api/auth", authRouter);
     app.use("/api/debitMemo", debitMemoRouter);
     app.use("/api/creditMemo", creditMemoRouter);
+    app.use("/api/vendorPaymentReport", paymentReportRouter);
 };
