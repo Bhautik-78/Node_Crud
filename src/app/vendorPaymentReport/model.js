@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const paymentSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "userRole" },
+    invoiceNumber : Number,
     paymentDate : String,
     paymentMode : String,
     amount : Number,
