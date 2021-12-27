@@ -24,6 +24,8 @@ router.post( "/forgetPassword", controller.forgetPassword );
 router.get("/getAllUser", controller.getALlUser);
 router.get("/getAllUser/:id", controller.getALlUser);
 router.put("/changeActiveStatus/:id", controller.ChangeActiveStatus);
-router.get("/getCountDetail",validateToken, controller.getCountDetail)
+router.get("/getCountDetail",validateToken, controller.getCountDetail);
+router.get("/user",controller.getUser);
+router.get("/user/:id",controller.getUserById);
 
 module.exports = router;

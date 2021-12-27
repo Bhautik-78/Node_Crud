@@ -151,6 +151,33 @@ exports.getALlUser = async (req,res) =>{
     }
 };
 
+exports.getUser = async (req, res) => {
+    try {
+        const userArray = await User.find({});
+        if(userArray.length){
+            res.status(200).send(userArray)
+        }else {
+            res.status(201).send({message: "data does not exist"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+exports.getUserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const applicationData = await User.find({_id: id});
+        if(applicationData.length){
+            res.status(200).send(applicationData)
+        }else {
+            res.status(400).send({message: "something went wrong"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
 exports.ChangeActiveStatus = async (req, res) => {
     try {
         const {id} = req.params;
