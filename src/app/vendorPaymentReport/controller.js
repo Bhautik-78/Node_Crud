@@ -19,11 +19,11 @@ exports.createPaymentReport = async (req, res) => {
                 applicationData.forEach(item => {
                     total += item.amount;
                 });
-                const value =  req.body.amount + total;
-                const finalValue = invoiceData.invoiceValue - value;
+                const value =  Number(req.body.amount) + total;
+                const finalValue = invoiceData.invoiceValue - (value || 0);
                 await Invoice.updateOne({invoiceNumber: req.body.invoiceNumber},{invoiceValue : finalValue});
             }else {
-                const finalValue = invoiceData.invoiceValue - req.body.amount;
+                const finalValue = invoiceData.invoiceValue - (Number(req.body.amount) || 0);
                 await Invoice.updateOne({invoiceNumber: req.body.invoiceNumber},{invoiceValue : finalValue});
             }
             const isCreated = await PaymentReport.create(req.body);
