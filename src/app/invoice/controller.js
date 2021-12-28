@@ -255,7 +255,7 @@ exports.getInvoiceValue = async (req, res) => {
     try {
         const { id } = req.params;
         const applicationData = await Invoice.findOne({invoiceNumber: id});
-        const vendorData = await paymentReport.find({userId: applicationData.userID});
+        const vendorData = await paymentReport.find({invoiceNumber: applicationData.invoiceNumber});
         if(applicationData){
             const invoiceValue = applicationData.invoiceValue;
             if(vendorData.length){
@@ -264,8 +264,10 @@ exports.getInvoiceValue = async (req, res) => {
                     total += item.amount;
                 });
                 const finalValue = invoiceValue - total;
+                await Invoice.updateOne({invoiceNumber: id},{invoiceValue : finalValue});
                 res.status(200).send({invoiceValue : finalValue})
             }else {
+                await Invoice.updateOne({invoiceNumber: id},{invoiceValue : invoiceValue});
                 res.status(200).send({invoiceValue : invoiceValue})
             }
         }else {
