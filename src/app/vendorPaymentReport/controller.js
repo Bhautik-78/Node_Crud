@@ -24,3 +24,23 @@ exports.createPaymentReport = async (req, res) => {
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
+
+exports.getPaymentList = async (req, res) => {
+    try {
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken : authorization});
+        let paymentList = []
+        let query = {};
+        paymentList = await PaymentReport.find(query).populate({ path: 'userId', select: 'email mobileNumber firstName middleName lastName GST IFSCCode accountNumber panNo vendorType' });
+        if(!UserDetail.isAdmin){
+            paymentList = paymentList.filter(item => item.userId._id.toString() === UserDetail._id.toString())
+        }
+        if(paymentList.length){
+            res.status(200).send(paymentList)
+        }else {
+            res.status(201).send({message: "data does not exist"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};

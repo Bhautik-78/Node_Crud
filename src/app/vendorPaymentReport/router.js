@@ -8,5 +8,6 @@ const validateToken = require("../../middlewares/validateToken");
 const router = express.Router( );
 
 router.post("/create", validateToken, controller.createPaymentReport);
+router.get("/getPaymentList", validateToken, controller.getPaymentList);
 
 module.exports = router;
