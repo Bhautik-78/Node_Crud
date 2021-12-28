@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const PaymentReport = mongoose.model("vendorPaymentReport");
 const User = require("../auth/model");
+const Invoice = require("../invoice/model");
 const moment = require("moment");
 require('dotenv').config();
 
@@ -11,6 +12,20 @@ exports.createPaymentReport = async (req, res) => {
         if(UserDetail){
             req.body.paymentDate = moment(new Date()).format('YYYY-MM-DD');
             req.body.userId = UserDetail._id;
+            const invoiceData = await Invoice.findOne({invoiceNumber: req.body.invoiceNumber});
+            const applicationData = await PaymentReport.find({invoiceNumber : req.body.invoiceNumber});
+            if(applicationData.length){
+                let total = 0;
+                applicationData.forEach(item => {
+                    total += item.amount;
+                });
+                const value =  req.body.amount + total;
+                const finalValue = invoiceData.invoiceValue - value;
+                await Invoice.updateOne({invoiceNumber: req.body.invoiceNumber},{invoiceValue : finalValue});
+            }else {
+                const finalValue = invoiceData.invoiceValue - req.body.amount;
+                await Invoice.updateOne({invoiceNumber: req.body.invoiceNumber},{invoiceValue : finalValue});
+            }
             const isCreated = await PaymentReport.create(req.body);
             if(isCreated){
                 res.status(200).send({message: "successFully created"})

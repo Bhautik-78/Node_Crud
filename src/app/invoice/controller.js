@@ -264,10 +264,8 @@ exports.getInvoiceValue = async (req, res) => {
                     total += item.amount;
                 });
                 const finalValue = invoiceValue - total;
-                await Invoice.updateOne({invoiceNumber: id},{invoiceValue : finalValue});
                 res.status(200).send({invoiceValue : finalValue})
             }else {
-                await Invoice.updateOne({invoiceNumber: id},{invoiceValue : invoiceValue});
                 res.status(200).send({invoiceValue : invoiceValue})
             }
         }else {
