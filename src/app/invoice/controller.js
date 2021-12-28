@@ -254,10 +254,8 @@ exports.getInvoiceNumList = async (req, res) => {
 exports.getInvoiceValue = async (req, res) => {
     try {
         const { id } = req.params;
-        const {authorization = ''} = req.headers;
-        const UserDetail = await User.findOne({accessToken : authorization});
-        const vendorData = await paymentReport.find({userId: UserDetail._id});
         const applicationData = await Invoice.findOne({invoiceNumber: id});
+        const vendorData = await paymentReport.find({userId: applicationData.userID});
         if(applicationData){
             const invoiceValue = applicationData.invoiceValue;
             if(vendorData.length){
