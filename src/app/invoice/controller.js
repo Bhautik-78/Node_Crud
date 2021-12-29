@@ -9,11 +9,16 @@ require('dotenv').config();
 
 exports.createApplication = async (req, res) => {
     try {
-        const isCreated = await Invoice.create(req.body);
-        if (isCreated) {
-            res.status(200).send({message: "successFully created"})
-        } else {
-            res.status(400).send({message: "something Went Wrong"})
+        const uniq = await Invoice.find({invoiceNumber : req.body.invoiceNumber});
+        if(uniq.length){
+            res.status(400).send({message: "Invoice Number Already Exist"})
+        }else {
+            const isCreated = await Invoice.create(req.body);
+            if (isCreated) {
+                res.status(200).send({message: "successFully created"})
+            } else {
+                res.status(400).send({message: "something Went Wrong"})
+            }
         }
     } catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
