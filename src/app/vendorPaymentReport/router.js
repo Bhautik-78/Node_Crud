@@ -9,5 +9,6 @@ const router = express.Router( );
 
 router.post("/create", validateToken, controller.createPaymentReport);
 router.get("/getPaymentList", validateToken, controller.getPaymentList);
+router.get("/getOutStandingReport", validateToken, controller.getOutStandingReport);
 
 module.exports = router;
