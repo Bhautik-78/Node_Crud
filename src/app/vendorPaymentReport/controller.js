@@ -12,9 +12,6 @@ exports.createPaymentReport = async (req, res) => {
         if (UserDetail) {
             req.body.paymentDate = moment(new Date()).format('YYYY-MM-DD');
             req.body.userId = UserDetail._id;
-            const invoiceData = await Invoice.findOne({invoiceNumber: req.body.invoiceNumber});
-            const finalValue = invoiceData.invoiceValue - (Number(req.body.amount) || 0);
-            await Invoice.updateOne({invoiceNumber: req.body.invoiceNumber}, {invoiceValue: finalValue});
             const isCreated = await PaymentReport.create(req.body);
             if (isCreated) {
                 res.status(200).send({message: "successFully created"})

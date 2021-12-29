@@ -255,10 +255,20 @@ exports.getInvoiceValue = async (req, res) => {
     try {
         const {id} = req.params;
         const applicationData = await Invoice.findOne({invoiceNumber: id});
-        if (applicationData) {
+        const vendorData = await paymentReport.find({invoiceNumber: applicationData.invoiceNumber});
+        if(applicationData){
             const invoiceValue = applicationData.invoiceValue;
-            res.status(200).send({invoiceValue: invoiceValue})
-        } else {
+            if(vendorData.length){
+                let total = 0;
+                vendorData.forEach(item => {
+                    total += item.amount;
+                });
+                const finalValue = invoiceValue - total;
+                res.status(200).send({invoiceValue : finalValue})
+            }else {
+                res.status(200).send({invoiceValue : invoiceValue})
+            }
+        }else {
             res.status(400).send({message: "something Went Wrong"})
         }
     } catch (err) {
