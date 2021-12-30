@@ -65,8 +65,8 @@ exports.getApplicationFormEAN = async (req, res) => {
                 EANCode: EANCode
             }
         }
-        const applicationData = await Product.findOne(query);
-        if (UserDetail._id.toString() === applicationData.userID.toString()) {
+        const applicationData = await Product.find(query);
+        if (UserDetail._id.toString() === applicationData[0].userID.toString()) {
             const schemaData = await Schema.find(query);
             const sortingList = schemaData.sort((a, b) => {
                 return new Date(b.date) - new Date(a.date);
