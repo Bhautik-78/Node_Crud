@@ -56,6 +56,8 @@ exports.getApplication = async (req, res) => {
 
 exports.getApplicationFormEAN = async (req, res) => {
     try {
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken: authorization});
         const {EANCode} = req.query;
         let query = {};
         if (EANCode !== null) {
@@ -64,21 +66,24 @@ exports.getApplicationFormEAN = async (req, res) => {
             }
         }
         const applicationData = await Product.find(query);
-        const schemaData = await Schema.find(query);
-        const sortingList = schemaData.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
-        });
-        const schemaObject = sortingList.map(item => ({
-            id: item._id,
-            schemaName: item.schemaName
-        }));
+        if (UserDetail._id === applicationData.userID) {
+            const schemaData = await Schema.find(query);
+            const sortingList = schemaData.sort((a, b) => {
+                return new Date(b.date) - new Date(a.date);
+            });
+            const schemaObject = sortingList.map(item => ({
+                id: item._id,
+                schemaName: item.schemaName
+            }));
 
-        applicationData[0].schemaList = schemaObject || [];
-
-        if (applicationData.length) {
-            res.status(200).send(applicationData)
+            applicationData[0].schemaList = schemaObject || [];
+            if (applicationData.length) {
+                res.status(200).send(applicationData)
+            } else {
+                res.status(201).send({message: "data does not exist"})
+            }
         } else {
-            res.status(201).send({message: "data does not exist"})
+            res.status(201).send({message: "user not found"})
         }
     } catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
