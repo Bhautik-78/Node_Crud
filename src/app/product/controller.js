@@ -66,7 +66,7 @@ exports.getApplicationFormEAN = async (req, res) => {
             }
         }
         const applicationData = await Product.find(query);
-        if (UserDetail._id === applicationData.userID) {
+        if (UserDetail._id.toString() === applicationData.userID.toString()) {
             const schemaData = await Schema.find(query);
             const sortingList = schemaData.sort((a, b) => {
                 return new Date(b.date) - new Date(a.date);
