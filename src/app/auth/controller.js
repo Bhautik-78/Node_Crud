@@ -51,13 +51,13 @@ exports.CreateUser = async (req, res) => {
         }
         const mobile = await User.find({ mobileNumber : req.body.mobileNumber });
         if(mobile.length){
-            return res.status(400).send({message: "Mobile Number is Already Exist"})
+            return res.status(201).send({message: "Mobile Number is Already Exist"})
         }else {
             req.body.mobileNumber = Number(req.body.mobileNumber);
         }
         const email = await User.find({ email : req.body.email });
         if(email.length){
-            return res.status(400).send({message: "email is Already Exist"})
+            return res.status(201).send({message: "email is Already Exist"})
         }
         req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
         const isCreated = await User.create(req.body);
