@@ -17,6 +17,7 @@ const productSchema = new Schema({
     EANCode: Number,
     shelfLifeDays: Number,
     UOM: String,
+    netPTR : String,
     UOMConversation: String,
     margin: Number,
     schemes: String,
