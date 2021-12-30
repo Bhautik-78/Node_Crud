@@ -43,7 +43,7 @@ exports.CreateUser = async (req, res) => {
         if(file){
             var extname = path.extname(file.originalname);
             let filename = `/uploads/userimage/${file.originalname}`;
-            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
+            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
                 req.body.userImg = filename;
             }else {
                 req.body.userImg = "";
@@ -96,7 +96,7 @@ exports.editUser = async (req, res) => {
             }
             var extname = file && path.extname(file.originalname);
             let filename = `/uploads/userimage/${file.originalname}`;
-            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg') {
+            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
                 req.body.userImg = filename;
             }
         }
