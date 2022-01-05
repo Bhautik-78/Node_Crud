@@ -3,10 +3,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userRoleSchema = new Schema({
+    vendor_name : String,
+    vendor_Address_code : String,
+    address_Line1 : String,
+    address_Line2 : String,
+    postal_Code : Number,
+    state : String,
+    country_id : String,
+    city : String,
+    vendor_Code : Number,
+    system_Vendor_id : String,
     firstName: String,
     middleName: String,
     lastName: String,
-    address : String,
     mobileNumber: {
         type: Number,
         required: true,
@@ -30,7 +39,7 @@ const userRoleSchema = new Schema({
             }
         }
     },
-    panNo: Number,
+    panNo: String,
     bankName : String,
     accountNumber: Number,
     IFSCCode : String,
