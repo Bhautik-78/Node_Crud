@@ -444,3 +444,89 @@ exports.getState = async (req, res) => {
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
+
+exports.vendorCreateUser = async (req, res) => {
+    try {
+        const object = {
+            vendor_Name : req.body.vendor_name,
+            vendor_CO_FirstName : req.body.firstName,
+            vendor_CO_MiddleName : req.body.middleName,
+            vendor_CO_LastName : req.body.lastName,
+            vendor_Address_Code : req.body.vendor_Address_code,
+            address_Line1 : req.body.address_Line1,
+            address_Line2 : req.body.address_Line2,
+            postal_Code : req.body.postal_Code.toString(),
+            vendor_Phone_Number : req.body.mobileNumber.toString(),
+            vendor_Email : req.body.email,
+            state : req.body.state,
+            country_id : req.body.country_id,
+            city : req.body.city,
+            type_of_Vendors : req.body.vendorType,
+            vendor_Code : req.body.vendor_Code
+        };
+        const response = await axios.post(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/createNewVendor`, object,{
+            headers: {
+                'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
+                'user-code' : '1-1'
+            }
+        });
+        if(response.status === 200){
+            res.status(200).send(response.data)
+        }else {
+            res.status(201).send({message: "data does not exist"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+exports.syncCallForUSer = async (req, res) => {
+    try {
+        const UserDetail = await User.find({system_Vendor_id: {$exists: false}});
+        if(UserDetail.length){
+            for (const user of UserDetail) {
+                const object = {
+                    vendor_Name : user.vendor_name,
+                    vendor_CO_FirstName : user.firstName,
+                    vendor_CO_MiddleName : user.middleName,
+                    vendor_CO_LastName : user.lastName,
+                    vendor_Address_Code : user.vendor_Address_code,
+                    address_Line1 : user.address_Line1,
+                    address_Line2 : user.address_Line2,
+                    postal_Code : user.postal_Code.toString(),
+                    vendor_Phone_Number : user.mobileNumber.toString(),
+                    vendor_Email : user.email,
+                    state : user.state,
+                    country_id : user.country_id,
+                    city : user.city,
+                    type_of_Vendors : user.vendorType,
+                    vendor_Code : user.vendor_Code,
+                    vatNo : "",
+                    cstNo : "",
+                    gstNo : ""
+                };
+                await axios.post(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/createNewVendor`, object,{
+                    headers: {
+                        'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
+                        'user-code' : '1-1'
+                    }
+                }).then(
+                    async (response) => {
+                        const result = response.data;
+                        const systemKey = result.data;
+                        await User.updateOne({_id : user._id}, {system_Vendor_id : systemKey});
+                    },
+                    (error) => {
+                        console.log("error")
+                        console.log(error)
+                    }
+                );
+            }
+            res.status(200).send({message: 'successFully Created'})
+        }else {
+            res.status(201).send({message: "User Not Found"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};

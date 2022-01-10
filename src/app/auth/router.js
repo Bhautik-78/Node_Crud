@@ -27,7 +27,9 @@ router.put("/changeActiveStatus/:id", controller.ChangeActiveStatus);
 router.get("/getCountDetail",validateToken, controller.getCountDetail);
 router.get("/user",controller.getUser);
 router.get("/user/:id",controller.getUserById);
-router.get("/getCountry",controller.getCountry)
-router.get("/getState/:id",controller.getState)
+router.get("/syncCall",controller.syncCallForUSer);
+router.get("/getCountry",controller.getCountry);
+router.get("/getState/:id",controller.getState);
+router.post("/createUser",controller.vendorCreateUser);
 
 module.exports = router;
