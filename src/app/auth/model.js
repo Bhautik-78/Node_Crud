@@ -11,7 +11,7 @@ const userRoleSchema = new Schema({
     state : String,
     country_id : String,
     city : String,
-    vendor_Code : Number,
+    vendor_Code : String,
     system_Vendor_id : String,
     firstName: String,
     middleName: String,

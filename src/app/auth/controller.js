@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 const moment = require('moment');
 const User = mongoose.model("userRole");
 const DesPatch = require("../despatchNote/model");
@@ -402,6 +403,43 @@ exports.getCountDetail = async (req, res) => {
             countDetail.push(debitDetailObject)
         }
         res.status(200).send({message: "successFull",countList: countDetail})
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+exports.getCountry = async (req,res) => {
+    try {
+        const response = await axios.get(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/getChoiceListForCountry`,{
+            headers: {
+                'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
+                'user-code' : '1-1'
+            }
+        });
+        if(response.status === 200){
+            res.status(200).send(response.data)
+        }else {
+            res.status(201).send({message: "data does not exist"})
+        }
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+exports.getState = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const response = await axios.get(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/getChoiceListForState/${id}`,{
+            headers: {
+                'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
+                'user-code' : '1-1'
+            }
+        });
+        if(response.status === 200){
+            res.status(200).send(response.data)
+        }else {
+            res.status(201).send({message: "data does not exist"})
+        }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
     }
