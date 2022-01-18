@@ -232,6 +232,9 @@ exports.getCountDetail = async (req, res) => {
 
         const {authorization = ''} = req.headers;
         const roleDetail = await User.findOne({accessToken : authorization});
+        if(roleDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         const userId = roleDetail._id;
         const countDetail = [];
 

@@ -9,7 +9,7 @@ exports.createPaymentReport = async (req, res) => {
     try {
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken: authorization});
-        if (UserDetail) {
+        if (UserDetail !== null) {
             req.body.paymentDate = moment(new Date()).format('YYYY-MM-DD');
             req.body.userId = UserDetail._id;
             const isCreated = await PaymentReport.create(req.body);
@@ -19,7 +19,7 @@ exports.createPaymentReport = async (req, res) => {
                 res.status(400).send({message: "something Went Wrong"})
             }
         } else {
-            res.status(400).send({message: "something went wrong"})
+            res.status(401).send({success: false, message: "Failed to authenticate token."})
         }
     } catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
@@ -30,6 +30,9 @@ exports.getPaymentList = async (req, res) => {
     try {
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization});
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         let paymentList = []
         let query = {};
         paymentList = await PaymentReport.find(query).populate({ path: 'userId', select: 'email mobileNumber firstName middleName lastName GST IFSCCode accountNumber panNo vendorType' });
@@ -50,6 +53,9 @@ exports.getOutStandingReport = async (req, res) => {
     try {
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization});
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         let userList = [];
         if(UserDetail.isAdmin){
             userList = await User.find({isAdmin : false});

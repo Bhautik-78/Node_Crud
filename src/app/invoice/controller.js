@@ -30,6 +30,9 @@ exports.getApplication = async (req, res) => {
         const {invoiceNumber = '', startDate = '', endDate = '', userID= ''} = req.query;
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization})
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         let applicationData = []
         let query = {};
         if (invoiceNumber !== '') {
@@ -240,6 +243,9 @@ exports.getInvoiceNumList = async (req, res) => {
     try {
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization})
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         if(UserDetail){
             const applicationData = await Invoice.find({userID: UserDetail._id})
             if(applicationData.length){

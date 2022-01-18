@@ -15,6 +15,9 @@ exports.getApplication = async (req, res) => {
         const {productName = '', EANCode = '', SKUCode = '', startDate = '', endDate = '', userID = ''} = req.query;
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken: authorization})
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         let applicationData = []
         let query = {};
         if (productName !== '') {
@@ -59,6 +62,9 @@ exports.getApplicationFormEAN = async (req, res) => {
     try {
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken: authorization});
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         const {EANCode} = req.query;
         let query = {};
         if (EANCode !== null) {

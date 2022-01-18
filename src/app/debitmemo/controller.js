@@ -7,6 +7,9 @@ exports.getAllUserDebitMemo = async (req, res) => {
         const {userID = ''} = req.query;
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization})
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         let userDebitMemoArray = []
         let query = {};
         if(userID !== ''){
