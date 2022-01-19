@@ -485,7 +485,9 @@ exports.vendorCreateUser = async (req, res) => {
 
 exports.syncCallForUSer = async (req, res) => {
     try {
-        const UserDetail = await User.find({system_Vendor_id: {$exists: false}});
+        const UserDetailExist = await User.find({system_Vendor_id: {$exists: false}});
+        const UserDetailBlank = await User.find({system_Vendor_id: ''});
+        const UserDetail = UserDetailExist.concat(UserDetailBlank);
         if(UserDetail.length){
             for (const user of UserDetail) {
                 const object = {
