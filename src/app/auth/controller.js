@@ -413,7 +413,7 @@ exports.getCountDetail = async (req, res) => {
 
 exports.getCountry = async (req,res) => {
     try {
-        const response = await axios.get(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/getChoiceListForCountry`,{
+        const response = await axios.get(`https://api.trevy.ai/hoservices/service/user/accounts/getChoiceListForCountry`,{
             headers: {
                 'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
                 'user-code' : '1-1'
@@ -432,7 +432,7 @@ exports.getCountry = async (req,res) => {
 exports.getState = async (req, res) => {
     try {
         const id = req.params.id;
-        const response = await axios.get(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/getChoiceListForState/${id}`,{
+        const response = await axios.get(`https://api.trevy.ai/hoservices/service/user/accounts/getChoiceListForState/${id}`,{
             headers: {
                 'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
                 'user-code' : '1-1'
@@ -467,7 +467,7 @@ exports.vendorCreateUser = async (req, res) => {
             type_of_Vendors : req.body.vendorType,
             vendor_Code : req.body.vendor_Code
         };
-        const response = await axios.post(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/createNewVendor`, object,{
+        const response = await axios.post(`https://api.trevy.ai/hoservices/service/user/accounts/createNewVendor`, object,{
             headers: {
                 'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
                 'user-code' : '1-1'
@@ -510,7 +510,7 @@ exports.syncCallForUSer = async (req, res) => {
                     cstNo : "",
                     gstNo : ""
                 };
-                await axios.post(`https://api.trevy.ai/nichesuite-webservices/service/user/accounts/createNewVendor`, object,{
+                await axios.post(`https://api.trevy.ai/hoservices/service/user/accounts/createNewVendor`, object,{
                     headers: {
                         'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
                         'user-code' : '1-1'
