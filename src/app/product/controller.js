@@ -335,7 +335,7 @@ exports.changeStatusPriceApproval = async (req, res) => {
 exports.getProductByVendorSystem = async (req, res) => {
     try {
         const id = req.params.id;
-        const response = await axios.get(`https://api.trevy.ai/nichesuite-webservices/service/items/searchItemByBarCode/0/5/${id}`,{
+        const response = await axios.get(`https://api.trevy.ai/hoservices/service/items/searchItemByBarCode/0/5/${id}`,{
             headers: {
                 'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
                 'user-code' : '1-1'
