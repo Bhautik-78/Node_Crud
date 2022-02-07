@@ -274,7 +274,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 despatchDetailObject.last10DayDespatch = DesPatchDetailLastTen.length
             }else {
-                const userDespatchDetail = DesPatchDetail.filter(item => item.userID.toString() === userId.toString())
+                const userDespatchDetail = DesPatchDetail.filter(item => item.userID && item.userID.toString() === userId.toString())
                 despatchDetailObject.totalDespatch = userDespatchDetail.length
                 const userDespatchDetailLastTen = userDespatchDetail.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
@@ -301,7 +301,7 @@ exports.getCountDetail = async (req, res) => {
                 invoiceDetailObject.sumOfTotalInvoice = total;
                 invoiceDetailObject.sumOfDaysInvoice = daysTotal;
             }else {
-                const userInvoiceDetail = InvoiceDetail.filter(item => item.userID.toString() === userId.toString())
+                const userInvoiceDetail = InvoiceDetail.filter(item => item.userID && item.userID.toString() === userId.toString())
                 let total = 0;
                 userInvoiceDetail.forEach(item => {
                     total += item.invoiceValue;
@@ -328,7 +328,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 productDetailObject.last10DayProductDetail = ProductDetailLastTen.length;
             }else {
-                const userProductDetail = ProductDetail.filter(item => item.userID.toString() === userId.toString())
+                const userProductDetail = ProductDetail.filter(item => item.userID && item.userID.toString() === userId.toString())
                 productDetailObject.totalProduct = userProductDetail.length;
                 const userProductDetailLastTen = userProductDetail.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
@@ -345,7 +345,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 PurchaseOrderDetailObject.last10DayPurchaseOrderDetail = PurchaseOrderDetailLastTen.length;
             }else {
-                const userPurchaseOrder = PurchaseOrderDetail.filter(item => item.userID.toString() === userId.toString())
+                const userPurchaseOrder = PurchaseOrderDetail.filter(item => item.userID && item.userID.toString() === userId.toString())
                 PurchaseOrderDetailObject.totalPurchaseOrder = userPurchaseOrder.length;
                 const userPurchaseOrderLastTen = userPurchaseOrder.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
@@ -362,7 +362,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 SchemaDetailObject.last10DaySchemaDetail = SchemaDetailLastTen.length;
             }else {
-                const userSchema = SchemaDetail.filter(item => item.userID.toString() === userId.toString());
+                const userSchema = SchemaDetail.filter(item => item.userID && item.userID.toString() === userId.toString());
                 SchemaDetailObject.totalSchema = userSchema.length;
                 const userSchemaLastTen = userSchema.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
@@ -379,7 +379,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 creditDetailObject.last10DayCreditDetail = CreditDetailLastTen.length;
             }else {
-                const userCredit = CreditDetail.filter(item => item.userID.toString() === userId.toString());
+                const userCredit = CreditDetail.filter(item => item.userID && item.userID.toString() === userId.toString());
                 creditDetailObject.totalCredit = userCredit.length;
                 const userCreditLastTen = userCredit.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
@@ -396,7 +396,7 @@ exports.getCountDetail = async (req, res) => {
                 });
                 debitDetailObject.last10DayDebitDetail = DebitDetailLastTen.length;
             }else {
-                const userDebit = DebitDetail.filter(item => item.userID.toString() === userId.toString());
+                const userDebit = DebitDetail.filter(item => item.userID && item.userID.toString() === userId.toString());
                 debitDetailObject.totalDebit = userDebit.length;
                 const userDebitLastTen = userDebit.filter((item) => {
                     return item.createdAt >= moment().add(-10, "days");
