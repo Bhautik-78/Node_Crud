@@ -54,6 +54,30 @@ exports.getApplicationForID = async (req, res) => {
     }
 };
 
+exports.getApplicationForEanCode = async (req,res) => {
+    try {
+        const { eancode } = req.params;
+        const applicationData = await Schema.find({EANCode: Number(eancode)})
+        if(applicationData.length){
+            const newapplicationData = applicationData.map(data=> {
+                return{
+                    _id : data._id,
+                    userID : data.userID,
+                    schemaName : data.schemaName,
+                    EANCode : data.EANCode,
+                }
+            })
+            res.status(200).send(newapplicationData)
+        }else {
+            res.status(400).send({message: "something went wrong"})
+        }
+
+    }catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+}
+
+
 exports.createApplication = async (req, res) => {
     try {
         const {schemaName, EANCode} = req.body;
