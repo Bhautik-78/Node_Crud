@@ -303,6 +303,37 @@ exports.changeStatusPriceApproval = async (req, res) => {
     try {
         const promiseBuilder = {
             updateAppPromise: (payload, priceApproval) => new Promise(async (resolve) => {
+                const finalArray = [{
+                    "item_code": "",
+                    "vendorCode": "",
+                    "item_mrp": "",
+                    "item_selling_price": "",
+                    "itemDiscountPercentage": "0.0",
+                    "itemDiscountAmount": "0.0"
+                }];
+                const data = await Product.findOne({_id: mongoose.Types.ObjectId(payload)});
+                if (data.userID) {
+                    const user = await User.findOne({_id: data.userID});
+                    finalArray[0].vendorCode = user.system_Vendor_id || ""
+                }
+                finalArray[0].item_code = data.EANCode.toString();
+                finalArray[0].item_mrp = data.MRP;
+                finalArray[0].item_selling_price = data.sellingPrice;
+                console.log("finalArray",finalArray);
+                await axios.post(`https://api.trevy.ai/hoservices/service/items/updateVendorQuote`, finalArray, {
+                    headers: {
+                        'app-key': '2b845f01-789f-4d2f-a864-24075721408e',
+                        'user-code': '1-1',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(
+                    async (response) => {
+                        console.log("response", response)
+                    },
+                    (error) => {
+                        console.log("error")
+                    }
+                );
                 const isCreated = await Product.updateOne({_id: mongoose.Types.ObjectId(payload)}, {priceApproval: priceApproval});
                 if (isCreated && isCreated.ok) {
                     return resolve({success: true})
