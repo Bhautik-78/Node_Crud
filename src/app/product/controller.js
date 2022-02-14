@@ -314,7 +314,7 @@ exports.changeStatusPriceApproval = async (req, res) => {
                 const data = await Product.findOne({_id: mongoose.Types.ObjectId(payload)});
                 if (data.userID) {
                     const user = await User.findOne({_id: data.userID});
-                    finalArray[0].vendorCode = user.system_Vendor_id || ""
+                    finalArray[0].vendorCode = user.vendor_Code || ""
                 }
                 finalArray[0].item_code = data.EANCode.toString();
                 finalArray[0].item_mrp = data.MRP;
