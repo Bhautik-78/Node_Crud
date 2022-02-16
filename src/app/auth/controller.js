@@ -23,6 +23,7 @@ exports.loginAdmin = async (req, res) => {
     try {
         const {email, passWord} = req.body;
         const userDetail = await User.findOne({email});
+        if (!userDetail) return res.status(401).send({message: "User is not found"});
         const isMatch = bcrypt.compareSync(passWord, userDetail.passWord);
         if(isMatch){
             let token = jwt.sign({ email: email}, config.secret, {
@@ -89,7 +90,7 @@ exports.editUser = async (req, res) => {
         let file = req.file;
         const {id} = req.params;
         const isUser = await User.findOne({_id: id});
-        if (!isUser) return res.status(400).send({message: "User is not found"});
+        if (!isUser) return res.status(401).send({message: "User is not found"});
         if (file) {
             if (isUser.userImg) {
                 let oldImageDelete = path.join(process.cwd(), isUser.userImg);
@@ -104,6 +105,16 @@ exports.editUser = async (req, res) => {
         if (req.body.passWord) {
             req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
         }
+        for (let key in req.body) {
+            if(req.body[key] === ""){
+                req.body[key] = null;
+            }
+        }
+        for (let key in req.body) {
+            if(req.body[key] === ""){
+                req.body[key] = null;    
+            }            
+        } 
         const isUpdate = await User.updateOne({_id: id}, req.body);
         if (isUpdate) {
             res.status(200).send({message: "successFully updated data"})
@@ -151,6 +162,8 @@ exports.forgetPassword = async (req, res) => {
                     });
                 }
             });
+        }else{
+            res.status(401).send({message: "User Not Found"})
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
@@ -161,7 +174,7 @@ exports.getALlUser = async (req,res) =>{
     try {
         const {authorization = ''} = req.headers;
         const UserDetail = await User.findOne({accessToken : authorization});
-        if(!UserDetail || !UserDetail.isAdmin) res.status(400).send("Invalid User Request");
+        if(!UserDetail || !UserDetail.isAdmin) return res.status(401).send("Invalid User Request");
 
         const obj = {isAdmin : false};
         req.params.id ? obj._id = mongoose.Types.ObjectId(req.params.id) : null;
@@ -193,7 +206,7 @@ exports.getUserById = async (req, res) => {
         if(applicationData.length){
             res.status(200).send(applicationData)
         }else {
-            res.status(400).send({message: "something went wrong"})
+            res.status(401).send({message: "something went wrong"})
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
@@ -212,7 +225,7 @@ exports.ChangeActiveStatus = async (req, res) => {
                 res.status(400).send({message: "something Went Wrong"})
             }
         }else {
-            res.status(400).send({message: "User Not Found"})
+            res.status(401).send({message: "User Not Found"})
         }
     }catch (err) {
         res.status(500).send({message: err.message || "data does not exist"});
@@ -522,8 +535,8 @@ exports.syncCallForUSer = async (req, res) => {
                         await User.updateOne({_id : user._id}, {system_Vendor_id : systemKey});
                     },
                     (error) => {
-                        console.log("error")
-                        console.log(error)
+                        console.log("error");
+                        return res.status(400).send({message: "Error while calling third party Api"});
                     }
                 );
             }
