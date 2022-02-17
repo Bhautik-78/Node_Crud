@@ -312,14 +312,32 @@ exports.changeStatusPriceApproval = async (req, res) => {
                     "itemDiscountAmount": "0.0"
                 }];
                 const data = await Product.findOne({_id: mongoose.Types.ObjectId(payload)});
+                let itemId = null;
+                await axios.get(`https://api.trevy.ai/hoservices/service/items/searchItemByBarCode/0/1/${data.EANCode}`, {
+                    headers: {
+                        'app-key': '2b845f01-789f-4d2f-a864-24075721408e',
+                        'user-code': '1-1',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(
+                    async (response) => {
+                        if(response.data){
+                            itemId = response.data[0].item_id
+                        }else {
+                            res.status(400).send({success: false, message: "item code does not exist"})
+                        }
+                    },
+                    (error) => {
+                        res.status(500).send({message: error.message || "data does not exist"});
+                    }
+                );
                 if (data.userID) {
                     const user = await User.findOne({_id: data.userID});
                     finalArray[0].vendorCode = user.vendor_Code || ""
                 }
-                finalArray[0].item_code = data.EANCode.toString();
-                finalArray[0].item_mrp = data.MRP;
-                finalArray[0].item_selling_price = data.sellingPrice;
-                console.log("finalArray",finalArray);
+                finalArray[0].item_code = itemId.toString();
+                finalArray[0].item_mrp = data.MRP.toString();
+                finalArray[0].item_selling_price = data.sellingPrice.toString();
                 await axios.post(`https://api.trevy.ai/hoservices/service/items/updateVendorQuote`, finalArray, {
                     headers: {
                         'app-key': '2b845f01-789f-4d2f-a864-24075721408e',
@@ -328,10 +346,10 @@ exports.changeStatusPriceApproval = async (req, res) => {
                     }
                 }).then(
                     async (response) => {
-                        console.log("response", response)
+                        console.log("response", response.status)
                     },
                     (error) => {
-                        console.log("error")
+                        res.status(500).send({message: error.message || "data does not exist"});
                     }
                 );
                 const isCreated = await Product.updateOne({_id: mongoose.Types.ObjectId(payload)}, {priceApproval: priceApproval});
