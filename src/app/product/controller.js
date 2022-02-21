@@ -330,6 +330,8 @@ exports.changeStatusPriceApproval = async (req, res) => {
                     (error) => {
                         res.status(500).send({message: error.message || "data does not exist"});
                     }
+                ).catch(
+                    res.status(500).send({message: "data does not exist"})
                 );
                 if (data.userID) {
                     const user = await User.findOne({_id: data.userID});
@@ -351,6 +353,8 @@ exports.changeStatusPriceApproval = async (req, res) => {
                     (error) => {
                         res.status(500).send({message: error.message || "data does not exist"});
                     }
+                ).catch(
+                    res.status(500).send({message: "data does not exist"})
                 );
                 const isCreated = await Product.updateOne({_id: mongoose.Types.ObjectId(payload)}, {priceApproval: priceApproval});
                 if (isCreated && isCreated.ok) {
