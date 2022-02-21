@@ -328,10 +328,8 @@ exports.changeStatusPriceApproval = async (req, res) => {
                         }
                     },
                     (error) => {
-                        res.status(500).send({message: error.message || "data does not exist"});
+                        console.log("error",error)
                     }
-                ).catch(
-                    res.status(500).send({message: "data does not exist"})
                 );
                 if (data.userID) {
                     const user = await User.findOne({_id: data.userID});
@@ -340,6 +338,7 @@ exports.changeStatusPriceApproval = async (req, res) => {
                 finalArray[0].item_code = itemId.toString();
                 finalArray[0].item_mrp = data.MRP.toString();
                 finalArray[0].item_selling_price = data.sellingPrice.toString();
+                console.log("finalArray",finalArray)
                 await axios.post(`https://api.trevy.ai/hoservices/service/items/updateVendorQuote`, finalArray, {
                     headers: {
                         'app-key': '2b845f01-789f-4d2f-a864-24075721408e',
@@ -351,10 +350,8 @@ exports.changeStatusPriceApproval = async (req, res) => {
                         console.log("response", response.status)
                     },
                     (error) => {
-                        res.status(500).send({message: error.message || "data does not exist"});
+                        console.log("error",error)
                     }
-                ).catch(
-                    res.status(500).send({message: "data does not exist"})
                 );
                 const isCreated = await Product.updateOne({_id: mongoose.Types.ObjectId(payload)}, {priceApproval: priceApproval});
                 if (isCreated && isCreated.ok) {
