@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../auth/model");
+const axios = require('axios');
 const PurchaseOrder = mongoose.model("purchaseOrder");
 require('dotenv').config();
 
@@ -85,6 +86,33 @@ exports.deleteApplication = async (req, res) => {
         const isDeleted = await PurchaseOrder.deleteOne({_id: req.params.id});
         if (isDeleted) {
             res.status(200).send({message: "successFully deleted"})
+        } else {
+            res.status(400).send({message: "something Went Wrong"})
+        }
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
+exports.purchaseOrder = async (req, res) => {
+    try {
+        const {code} = req.body;
+        const object = {
+            "id": "",
+            "code": code || "",
+            "ref": "",
+            "status": "",
+            "sort": ""
+        };
+        const response = await axios.post(`https://api.trevy.ai/hoservices/service/purchase/order/0/10`,object,{
+            headers: {
+                'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
+                'user-code' : '1-1',
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.data.length) {
+            res.status(200).send({message: "successFully", result: response.data})
         } else {
             res.status(400).send({message: "something Went Wrong"})
         }
