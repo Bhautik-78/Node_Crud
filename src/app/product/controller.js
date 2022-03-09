@@ -31,9 +31,9 @@ exports.getApplication = async (req, res) => {
         }
         if (startDate !== '') {
             if (endDate !== '') {
-                query.dateOfAvailability = {$gte: startDate, $lte: endDate}
+                query.createdAt = {$gte: startDate, $lte: endDate}
             } else {
-                query.dateOfAvailability = {$gte: startDate}
+                query.createdAt = {$gte: startDate}
             }
         }
         if (userID !== '') {
