@@ -121,3 +121,35 @@ exports.purchaseOrder = async (req, res) => {
     }
 };
 
+exports.purchasePayment = async (req, res) => {
+    try {
+        const {status} = req.body;
+        const object = {
+            "code": "",
+            "fmDate": "",
+            "toDate": "",
+            "ref": "",
+            "status": status || "",
+            "sort": ""
+        };
+        const response = await axios.post(`https://api.trevy.ai/hoservices/service/purchase/payment/0/10`,object,{
+            headers: {
+                'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
+                'user-code' : '1-1',
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.data) {
+            if(response.data.length){
+                res.status(200).send({message: "successFully", result: response.data})
+            }else {
+                res.status(200).send({message: "successFully", result: response.data})
+            }
+        } else {
+            res.status(400).send({message: "something Went Wrong"})
+        }
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};
+
