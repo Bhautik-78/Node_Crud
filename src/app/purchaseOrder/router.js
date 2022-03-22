@@ -13,7 +13,7 @@ router.get("/get/:id", validateToken, controller.getApplicationForID)
 router.put("/edit/:id", validateToken, controller.editApplication);
 router.delete("/delete/:id", validateToken, controller.deleteApplication)
 router.post("/serviceOrder", controller.purchaseOrder)
-router.post("/purchase_payment", controller.purchasePayment)
-router.get("/purchase_return", controller.purchaseReturn)
+router.post("/purchase_payment",validateToken, controller.purchasePayment)
+router.get("/purchase_return",validateToken, controller.purchaseReturn)
 
 module.exports = router;
