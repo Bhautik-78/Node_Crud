@@ -161,17 +161,28 @@ exports.purchaseReturn = async (req, res) => {
             return res.status(401).send({success: false, message: "Failed to authenticate token."})
         }
         let object = {};
-        if(UserDetail.vendor_Code){
+        if(UserDetail.isAdmin === true){
             object = {
                 "code": "",
                 "fmDate": "",
                 "toDate": "",
-                "ref": UserDetail.vendor_Code || "",
+                "ref": "",
                 "status": "",
                 "sort": ""
             };
         }else {
-            return res.status(401).send({success: false, message: "cannot find vendor code"})
+            if(UserDetail.vendor_Code){
+                object = {
+                    "code": "",
+                    "fmDate": "",
+                    "toDate": "",
+                    "ref": UserDetail.vendor_Code || "",
+                    "status": "",
+                    "sort": ""
+                };
+            }else {
+                return res.status(401).send({success: false, message: "cannot find vendor code"})
+            }
         }
         const response = await axios.post(`https://api.trevy.ai/hoservices/service/purchase/returns/0/10`,object,{
             headers: {
