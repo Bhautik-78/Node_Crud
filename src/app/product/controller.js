@@ -39,7 +39,7 @@ exports.getApplication = async (req, res) => {
         if (userID !== '') {
             query.userID = userID
         }
-        applicationData = await Product.find(query);
+        applicationData = await Product.find(query).populate('schemes');
         if (!UserDetail.isAdmin) {
             applicationData = applicationData.filter(item => item.userID == UserDetail._id)
         }

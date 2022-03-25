@@ -46,6 +46,8 @@ const userRoleSchema = new Schema({
     paymentTerms: String,
     shippingTerms: String,
     GST: String,
+    cancelledCheque : String,
+    certiOfIncorporation : String,
     vendorType: String,
     passWord: String,
     isAdmin: {

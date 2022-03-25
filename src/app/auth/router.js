@@ -17,9 +17,17 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage})
 
+const multipleFile = upload.fields([
+    {name:"avatar"},  //maxCount:1
+    {name:"panpicture"},  //maxCount:1
+    {name:"gstpicture"},  //maxCount:1
+    {name:"cancelledchequepic"},  //maxCount:1
+    {name:"coincorporation"}  //maxCount:1
+])
+
 router.post("/login", controller.loginAdmin);
-router.post("/create", upload.single("file"), controller.CreateUser);
-router.put("/edit/:id", upload.single("file"), controller.editUser)
+router.post("/create", multipleFile, controller.CreateUser);
+router.put("/edit/:id", multipleFile, controller.editUser)
 router.post( "/forgetPassword", controller.forgetPassword );
 router.get("/getAllUser", controller.getALlUser);
 router.get("/getAllUser/:id", controller.getALlUser);

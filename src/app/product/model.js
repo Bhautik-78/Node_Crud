@@ -20,7 +20,7 @@ const productSchema = new Schema({
     netPTR : Number,
     UOMConversation: String,
     margin: Number,
-    schemes: String,
+    schemes: {type: Schema.Types.ObjectId, ref: 'schema'},
     remarks: String,
     active: Boolean,
     schemaList: Array,

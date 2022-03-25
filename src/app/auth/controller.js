@@ -41,15 +41,53 @@ exports.loginAdmin = async (req, res) => {
 
 exports.CreateUser = async (req, res) => {
     try {
-        let file = req.file;
+        let file = req.files;
         if(file){
-            var extname = path.extname(file.originalname);
-            let filename = `/uploads/userimage/${file.originalname}`;
-            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
-                req.body.userImg = filename;
-            }else {
-                req.body.userImg = "";
+            if (file.avatar) {                
+                var extname = path.extname(file.avatar[0].originalname);
+                let filename = `/uploads/userimage/${file.avatar[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                    req.body.userImg = filename;
+                }else {
+                    req.body.userImg = "";
+                }
             }
+            if(file.panpicture){
+                var extname = path.extname(file.panpicture[0].originalname);
+                let filename = `/uploads/userimage/${file.panpicture[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                    req.body.panNo = filename;
+                }else {
+                    req.body.panNo = "";
+                }
+            }
+            if(file.gstpicture){
+                var extname = path.extname(file.gstpicture[0].originalname);
+                let filename = `/uploads/userimage/${file.gstpicture[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                    req.body.GST = filename;
+                }else {
+                    req.body.GST = "";
+                }
+            }
+            if(file.cancelledchequepic){
+                var extname = path.extname(file.cancelledchequepic[0].originalname);
+                let filename = `/uploads/userimage/${file.cancelledchequepic[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                    req.body.cancelledCheque = filename;
+                }else {
+                    req.body.cancelledCheque = "";
+                }
+            }
+            if(file.coincorporation){
+                var extname = path.extname(file.coincorporation[0].originalname);
+                let filename = `/uploads/userimage/${file.coincorporation[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                    req.body.certiOfIncorporation = filename;
+                }else {
+                    req.body.certiOfIncorporation = "";
+                }
+            }            
         }
         const mobile = await User.find({ mobileNumber : req.body.mobileNumber });
         const email = await User.find({ email : req.body.email });
@@ -87,7 +125,7 @@ exports.CreateUser = async (req, res) => {
 
 exports.editUser = async (req, res) => {
     try {
-        let file = req.file;
+        let file = req.files;
         const {id} = req.params;
         const isUser = await User.findOne({_id: id});
         if (!isUser) return res.status(401).send({message: "User is not found"});
