@@ -111,14 +111,14 @@ exports.downloadExcel = async (req, res) => {
             {header: "PODate", key: "PODate", width: 20},
             {header: "invoiceNumber", key: "invoiceNumber", width: 20},
             {header: "invoiceDate", key: "invoiceDate", width: 20},
-            {header: "NoOfPackages", key: "NoOfPackages", width: 20},
-            {header: "netWeight", key: "netWeight", width: 20},
-            {header: "grossWeight", key: "grossWeight", width: 20},
+            // {header: "NoOfPackages", key: "NoOfPackages", width: 20},
+            // {header: "netWeight", key: "netWeight", width: 20},
+            // {header: "grossWeight", key: "grossWeight", width: 20},
             {header: "invoiceValue", key: "invoiceValue", width: 20},
             {header: "CGSTValue", key: "CGSTValue", width: 20},
             {header: "SGSTValue", key: "SGSTValue", width: 20},
             {header: "IGSTValue", key: "IGSTValue", width: 20},
-            {header: "paymentReceived", key: "paymentReceived", width: 20},
+            // {header: "paymentReceived", key: "paymentReceived", width: 20},
         ];
         res.setHeader(
             "Content-Type",

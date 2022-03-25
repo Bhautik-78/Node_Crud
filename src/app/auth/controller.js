@@ -55,7 +55,7 @@ exports.CreateUser = async (req, res) => {
             if(file.panpicture){
                 var extname = path.extname(file.panpicture[0].originalname);
                 let filename = `/uploads/userimage/${file.panpicture[0].originalname}`;
-                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
                     req.body.panNo = filename;
                 }else {
                     req.body.panNo = "";
@@ -64,7 +64,7 @@ exports.CreateUser = async (req, res) => {
             if(file.gstpicture){
                 var extname = path.extname(file.gstpicture[0].originalname);
                 let filename = `/uploads/userimage/${file.gstpicture[0].originalname}`;
-                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
                     req.body.GST = filename;
                 }else {
                     req.body.GST = "";
@@ -73,7 +73,7 @@ exports.CreateUser = async (req, res) => {
             if(file.cancelledchequepic){
                 var extname = path.extname(file.cancelledchequepic[0].originalname);
                 let filename = `/uploads/userimage/${file.cancelledchequepic[0].originalname}`;
-                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
                     req.body.cancelledCheque = filename;
                 }else {
                     req.body.cancelledCheque = "";
@@ -82,7 +82,7 @@ exports.CreateUser = async (req, res) => {
             if(file.coincorporation){
                 var extname = path.extname(file.coincorporation[0].originalname);
                 let filename = `/uploads/userimage/${file.coincorporation[0].originalname}`;
-                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
                     req.body.certiOfIncorporation = filename;
                 }else {
                     req.body.certiOfIncorporation = "";
