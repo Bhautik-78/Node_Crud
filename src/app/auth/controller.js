@@ -43,7 +43,7 @@ exports.CreateUser = async (req, res) => {
     try {
         let file = req.files;
         if(file){
-            if (file.avatar) {                
+            if (file.avatar) {
                 var extname = path.extname(file.avatar[0].originalname);
                 let filename = `/uploads/userimage/${file.avatar[0].originalname}`;
                 if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
@@ -87,7 +87,7 @@ exports.CreateUser = async (req, res) => {
                 }else {
                     req.body.certiOfIncorporation = "";
                 }
-            }            
+            }
         }
         const mobile = await User.find({ mobileNumber : req.body.mobileNumber });
         const email = await User.find({ email : req.body.email });
@@ -130,15 +130,76 @@ exports.editUser = async (req, res) => {
         const isUser = await User.findOne({_id: id});
         if (!isUser) return res.status(401).send({message: "User is not found"});
         if (file) {
-            if (isUser.userImg) {
-                let oldImageDelete = path.join(process.cwd(), isUser.userImg);
-                fs.unlinkSync(oldImageDelete);
+            if (file.avatar) {
+                if (isUser.userImg) {
+                    let oldImageDelete = path.join(process.cwd(), isUser.userImg);
+                    fs.unlinkSync(oldImageDelete);
+                }
+                var extname = file.avatar && path.extname(file.avatar[0].originalname);
+                let filename = `/uploads/userimage/${file.avatar[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
+                    req.body.userImg = filename;
+                }else {
+                    req.body.userImg = "";
+                }
             }
-            var extname = file && path.extname(file.originalname);
-            let filename = `/uploads/userimage/${file.originalname}`;
-            if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG') {
-                req.body.userImg = filename;
+
+            if (file.panpicture) {
+                if (isUser.panNo) {
+                    let oldImageDelete = path.join(process.cwd(), isUser.panNo);
+                    fs.unlinkSync(oldImageDelete);
+                }
+                var extname = file.panpicture && path.extname(file.panpicture[0].originalname);
+                let filename = `/uploads/userimage/${file.panpicture[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
+                    req.body.panNo = filename;
+                }else {
+                    req.body.panNo = "";
+                }
             }
+
+            if(file.gstpicture){
+                if (isUser.GST) {
+                    let oldImageDelete = path.join(process.cwd(), isUser.GST);
+                    fs.unlinkSync(oldImageDelete);
+                }
+                var extname = file.gstpicture && path.extname(file.gstpicture[0].originalname);
+                let filename = `/uploads/userimage/${file.gstpicture[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
+                    req.body.GST = filename;
+                }else {
+                    req.body.GST = "";
+                }
+            }
+
+            if(file.cancelledchequepic){
+                if (isUser.cancelledCheque) {
+                    let oldImageDelete = path.join(process.cwd(), isUser.cancelledCheque);
+                    fs.unlinkSync(oldImageDelete);
+                }
+                var extname = file.cancelledchequepic && path.extname(file.cancelledchequepic[0].originalname);
+                let filename = `/uploads/userimage/${file.cancelledchequepic[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
+                    req.body.cancelledCheque = filename;
+                }else {
+                    req.body.cancelledCheque = "";
+                }
+            }
+
+            if(file.coincorporation){
+                if (isUser.certiOfIncorporation) {
+                    let oldImageDelete = path.join(process.cwd(), isUser.certiOfIncorporation);
+                    fs.unlinkSync(oldImageDelete);
+                }
+                var extname = file.coincorporation && path.extname(file.coincorporation[0].originalname);
+                let filename = `/uploads/userimage/${file.coincorporation[0].originalname}`;
+                if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
+                    req.body.certiOfIncorporation = filename;
+                }else {
+                    req.body.certiOfIncorporation = "";
+                }
+            }
+
         }
         if (req.body.passWord) {
             req.body.passWord = bcrypt.hashSync(req.body.passWord, 8);
@@ -150,9 +211,9 @@ exports.editUser = async (req, res) => {
         }
         for (let key in req.body) {
             if(req.body[key] === ""){
-                req.body[key] = null;    
-            }            
-        } 
+                req.body[key] = null;
+            }
+        }
         const isUpdate = await User.updateOne({_id: id}, req.body);
         if (isUpdate) {
             res.status(200).send({message: "successFully updated data"})
