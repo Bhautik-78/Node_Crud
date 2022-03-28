@@ -123,15 +123,38 @@ exports.purchaseOrder = async (req, res) => {
 
 exports.purchasePayment = async (req, res) => {
     try {
+        const {authorization = ''} = req.headers;
+        const UserDetail = await User.findOne({accessToken : authorization});
+        if(UserDetail === null){
+            return res.status(401).send({success: false, message: "Failed to authenticate token."})
+        }
         const {status} = req.body;
-        const object = {
-            "code": "",
-            "fmDate": "",
-            "toDate": "",
-            "ref": "",
-            "status": status || "",
-            "sort": ""
-        };
+
+        let object = {};
+        if(UserDetail.isAdmin === true){
+            object = {
+                "code": "",
+                "fmDate": "",
+                "toDate": "",
+                "ref": "",
+                "status": status || "",
+                "sort": ""
+            };
+        }else {
+            if(UserDetail.vendor_Code){
+                object = {
+                    "code": "",
+                    "fmDate": "",
+                    "toDate": "",
+                    "ref": UserDetail.vendor_Code || "",
+                    "status": status || "",
+                    "sort": ""
+                };
+            }else {
+                return res.status(401).send({success: false, message: "cannot find vendor code"})
+            }
+        }
+
         const response = await axios.post(`https://api.trevy.ai/hoservices/service/purchase/payment/0/10`,object,{
             headers: {
                 'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
