@@ -5,7 +5,9 @@ const Schema = mongoose.Schema;
 const debitMemoSchema = new Schema({
     userID : String,
     productName:String,
+    vendorInvoiceRef: String,
     vendorInvoiceRef_Date:String,
+    eMetroPoRef: String,
     eMetroPoRef_Date:String,
     description:String,
     itemQuantity:Number,
