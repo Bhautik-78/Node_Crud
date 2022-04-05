@@ -56,18 +56,18 @@ exports.CreateUser = async (req, res) => {
                 var extname = path.extname(file.panpicture[0].originalname);
                 let filename = `/uploads/userimage/${file.panpicture[0].originalname}`;
                 if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
-                    req.body.panNo = filename;
+                    req.body.panDocument = filename;
                 }else {
-                    req.body.panNo = "";
+                    req.body.panDocument = "";
                 }
             }
             if(file.gstpicture){
                 var extname = path.extname(file.gstpicture[0].originalname);
                 let filename = `/uploads/userimage/${file.gstpicture[0].originalname}`;
                 if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
-                    req.body.GST = filename;
+                    req.body.gstDocument = filename;
                 }else {
-                    req.body.GST = "";
+                    req.body.gstDocument = "";
                 }
             }
             if(file.cancelledchequepic){
@@ -145,30 +145,30 @@ exports.editUser = async (req, res) => {
             }
 
             if (file.panpicture) {
-                if (isUser.panNo) {
-                    let oldImageDelete = path.join(process.cwd(), isUser.panNo);
+                if (isUser.panDocument) {
+                    let oldImageDelete = path.join(process.cwd(), isUser.panDocument);
                     fs.unlinkSync(oldImageDelete);
                 }
                 var extname = file.panpicture && path.extname(file.panpicture[0].originalname);
                 let filename = `/uploads/userimage/${file.panpicture[0].originalname}`;
                 if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
-                    req.body.panNo = filename;
+                    req.body.panDocument = filename;
                 }else {
-                    req.body.panNo = "";
+                    req.body.panDocument = "";
                 }
             }
 
             if(file.gstpicture){
-                if (isUser.GST) {
-                    let oldImageDelete = path.join(process.cwd(), isUser.GST);
+                if (isUser.gstDocument) {
+                    let oldImageDelete = path.join(process.cwd(), isUser.gstDocument);
                     fs.unlinkSync(oldImageDelete);
                 }
                 var extname = file.gstpicture && path.extname(file.gstpicture[0].originalname);
                 let filename = `/uploads/userimage/${file.gstpicture[0].originalname}`;
                 if (extname === '.png' || extname === '.jpg' || extname === '.jpeg' || extname === '.PNG' || extname === '.pdf') {
-                    req.body.GST = filename;
+                    req.body.gstDocument = filename;
                 }else {
-                    req.body.GST = "";
+                    req.body.gstDocument = "";
                 }
             }
 
