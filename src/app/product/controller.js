@@ -216,10 +216,22 @@ exports.uploadExcel = async (req, res) => {
                     return acc;
                 }
             }, []);
+            console.log("filteredArr",filteredArr);
             if (filteredArr && filteredArr.length > 0) {
-                filteredArr.forEach(item => {
-                    allPromises.push(promiseBuilder.updateAppPromise(item, userID))
-                });
+                for (const item of filteredArr) {
+                    const response = await axios.get(`https://api.trevy.ai/hoservices/service/items/searchItemByBarCode/0/5/${item.EANCode}`,{
+                        headers: {
+                            'app-key' : '2b845f01-789f-4d2f-a864-24075721408e',
+                            'user-code' : '1-1'
+                        }
+                    });
+                    console.log("response",response.status)
+                    if(response.status === 200){
+                        allPromises.push(promiseBuilder.updateAppPromise(item, userID))
+                    }else {
+                        res.status(201).send({status: false, message: `Row no.  EAN Code does not exist`})
+                    }
+                }
                 await Promise.all(allPromises).then(values => {
                     if (values.some(value => value.success)) {
                         res.status(200).send({success: true, message: "Successfully created"})

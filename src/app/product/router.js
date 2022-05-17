@@ -23,7 +23,7 @@ router.get("/getProductDetails", validateToken, controller.getApplicationFormEAN
 router.post("/create", validateToken, controller.createApplication);
 router.put("/edit/:id", validateToken, controller.editApplication);
 router.delete("/delete/:id", validateToken, controller.deleteApplication)
-router.post("/excelUpload", validateToken, upload.single("file"), controller.uploadExcel)
+router.post("/excelUpload", upload.single("file"), controller.uploadExcel)
 router.get("/download", controller.downloadExcel)
 router.put("/changeStatusPriceApproval",validateToken, controller.changeStatusPriceApproval)
 router.get("/getProductByEANCode/:id", controller.getProductByVendorSystem)
