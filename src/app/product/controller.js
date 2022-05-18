@@ -216,7 +216,6 @@ exports.uploadExcel = async (req, res) => {
                     return acc;
                 }
             }, []);
-            console.log("filteredArr",filteredArr);
             if (filteredArr && filteredArr.length > 0) {
                 for (const item of filteredArr) {
                     const response = await axios.get(`https://api.trevy.ai/hoservices/service/items/searchItemByBarCode/0/5/${item.EANCode}`,{
@@ -225,7 +224,6 @@ exports.uploadExcel = async (req, res) => {
                             'user-code' : '1-1'
                         }
                     });
-                    console.log("response",response.status)
                     if(response.status === 200){
                         allPromises.push(promiseBuilder.updateAppPromise(item, userID))
                     }else {
@@ -254,8 +252,9 @@ exports.downloadExcel = async (req, res) => {
     try {
 
         const schema = await Schema.find({});
-        const scheamList = Array.isArray(schema) ? schema.map(item => item.schemaName) : []
-        const str = scheamList.toString();
+        const scheamList = Array.isArray(schema) ? schema.map((item,id) => item.schemaName) : []
+        const dataArray=await scheamList.filter((item,id)=>(id<10))
+        const str = dataArray.toString();
         const backToArr = [`"${str.split()}"`];
 
         let workbook = new excel.Workbook();
@@ -284,10 +283,9 @@ exports.downloadExcel = async (req, res) => {
 
 // Add Array Rows
 //       worksheet.addRows(dummyData);
-
         worksheet.dataValidations.add('Q2:Q9999', {
             type: 'list',
-            allowBlank: false,
+            allowBlank: true,
             showErrorMessage: true,
             promptTitle: 'The value must be schema List',
             prompt: 'The value must be schema List',
