@@ -13,6 +13,6 @@ router.get("/getByEan/:eancode", validateToken, controller.getApplicationForEanC
 router.post("/create", validateToken, controller.createApplication);
 router.put("/edit/:id", validateToken, controller.editApplication);
 router.delete("/delete/:id", validateToken, controller.deleteApplication)
-router.get("/getMaxEnCode", controller.getMaxEnCode)
+router.get("/getMaxSchemaNumber", controller.getMaxSchemaNumber)
 
 module.exports = router;

@@ -122,19 +122,19 @@ exports.deleteApplication = async (req, res) => {
     }
 };
 
-exports.getMaxEnCode = async (req, res) => {
+exports.getMaxSchemaNumber = async (req, res) => {
     try {
         const relate = await Schema.aggregate([
             {
                 $group: {
                     _id: null,
-                    maxQuantity: {$max: "$EANCode"}
+                    maxQuantity: {$max: "$schemaNumber"}
                 }
             }
         ]);
-        let result = relate[0].maxQuantity > 1000 ? relate[0].maxQuantity : 1000;
+        let result = relate[0].maxQuantity ? (relate[0].maxQuantity + 1) : 1001;
         if(relate){
-            res.status(200).send({count : result,message: "successFully fetched Score"})
+            res.status(200).send({maxSchemaNumber : result,message: "successFully fetched maxSchemaNumber"})
         }else {
             res.status(400).send({message: "something Went Wrong"})
         }
