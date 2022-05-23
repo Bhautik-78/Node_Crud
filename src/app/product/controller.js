@@ -335,8 +335,8 @@ exports.changeStatusPriceApproval = async (req, res) => {
                     }
                 }).then(
                     async (response) => {
-                        if(response.data){
-                            itemId = response.data[0].item_id
+                        if(response.data && response.data[0]?.item_id){
+                            itemId = response.data[0]?.item_id
                         }else {
                             res.status(400).send({success: false, message: "item code does not exist"})
                         }

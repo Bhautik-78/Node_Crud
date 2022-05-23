@@ -25,7 +25,7 @@ router.put("/edit/:id", validateToken, controller.editApplication);
 router.delete("/delete/:id", validateToken, controller.deleteApplication)
 router.post("/excelUpload", validateToken, upload.single("file"), controller.uploadExcel)
 router.get("/download", controller.downloadExcel)
-router.put("/changeStatusPriceApproval",validateToken, controller.changeStatusPriceApproval)
+router.put("/changeStatusPriceApproval", controller.changeStatusPriceApproval)
 router.get("/getProductByEANCode/:id", controller.getProductByVendorSystem)
 
 module.exports = router;
