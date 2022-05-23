@@ -121,3 +121,24 @@ exports.deleteApplication = async (req, res) => {
         res.status(500).send({message: err.message || "data does not exist"});
     }
 };
+
+exports.getMaxEnCode = async (req, res) => {
+    try {
+        const relate = await Schema.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    maxQuantity: {$max: "$EANCode"}
+                }
+            }
+        ]);
+        let result = relate[0].maxQuantity > 1000 ? relate[0].maxQuantity : 1000;
+        if(relate){
+            res.status(200).send({count : result,message: "successFully fetched Score"})
+        }else {
+            res.status(400).send({message: "something Went Wrong"})
+        }
+    } catch (err) {
+        res.status(500).send({message: err.message || "data does not exist"});
+    }
+};

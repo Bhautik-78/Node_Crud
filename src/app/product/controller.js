@@ -324,6 +324,9 @@ exports.changeStatusPriceApproval = async (req, res) => {
                 }];
                 const data = await Product.findOne({_id: mongoose.Types.ObjectId(payload)});
                 let itemId = null;
+                if(!data){
+                    return res.status(403).send({message : 'Product Data Not Found'});
+                }
                 await axios.get(`https://api.trevy.ai/hoservices/service/items/searchItemByBarCode/0/1/${data.EANCode}`, {
                     headers: {
                         'app-key': '2b845f01-789f-4d2f-a864-24075721408e',
